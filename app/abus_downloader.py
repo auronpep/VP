@@ -3,6 +3,7 @@ import platform
 import gradio as gr
 from yt_dlp import YoutubeDL
 from yt_dlp.postprocessor import PostProcessor
+from urllib.parse import urlparse as _urlparse
 
 from app.abus_path import cmd_rename_file, path_shorten
 
@@ -59,6 +60,10 @@ class YoutubeDownloader:
 
    
     def yt_download(self, url: str, download_folder: str, quality: str = "good", maxDuration: int = None):       
+        _parsed = _urlparse(url)
+        if _parsed.scheme not in ('http', 'https'):
+            raise ValueError(f"Only http/https URLs are allowed, got: {_parsed.scheme!r}")
+
         ydl_opts = {}
         ydl_opts['keepvideo'] = False
         ydl_opts['progress_hooks'] = [self.dl_progress_hook]

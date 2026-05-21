@@ -159,7 +159,9 @@ if [ "$CONDA_EXISTS" == "F" ] || [ "$CONDA_BASE_CORRUPTED" == "T" ]; then
         exit 1
     fi
     
-    # Verify checksum (simplified check)
+    # Verify checksum before running installer
+    echo "${MINICONDA_CHECKSUM}  ${INSTALL_DIR}/${MINICONDA_INSTALLER}" | sha256sum --check || { echo "ERROR: Miniconda checksum mismatch. Aborting."; exit 1; }
+
     echo "Installing Miniconda to $CONDA_ROOT_PREFIX"
     # Run installer - python.app package may fail on macOS but conda should still work
     # Use set +e temporarily to allow installation to continue even if python.app fails
@@ -404,7 +406,8 @@ if [ "$ABUS_GENUINE_INSTALLED" == "F" ]; then
     python -m pip install huggingface-hub==0.27.1
 fi
 
-export LOG_LEVEL=DEBUG
+# LOG_LEVEL can be set externally; debug logging is not forced here
+if [ -z "${GRADIO_AUTH:-}" ]; then
+    echo "WARNING: Gradio is running without authentication. Set GRADIO_AUTH=user:password or pass --gradio-auth to restrict access."
+fi
 python start-abus.py voice
-
-
