@@ -109,7 +109,7 @@ class WhisperXInference:
     
     @staticmethod
     def available_langs():
-        return sorted(list(whisper.tokenizer.LANGUAGES.values()))    
+        return sorted(whisper.tokenizer.LANGUAGES.values())    
     
     
     @staticmethod
