@@ -267,32 +267,25 @@ def ffmpeg_to_mono(input_path: str, left_path: str, right_path: str, audio_forma
 
 
 
-def ffmpeg_to_stereo(left_path, right_path, stereo_path):
+def ffmpeg_join_to_stereo(left_path, right_path, stereo_path):
     file_name, file_extension = os.path.splitext(os.path.basename(stereo_path))
     ext = file_extension.lower()
-    
-    
+
+
     filter_complex = "[0:a][1:a]join=inputs=2:channel_layout=stereo[a]"
     # filter_complex = "[0:a][1:a]amerge=inputs=2[a]"
     
-    if ext == ".flac":
-        encoding_args = ['-c:a', 'flac', '-ar', '48000', '-compression_level', '0', '-ac', '2']
-    elif ext == ".mp3":
-        encoding_args = ['-c:a', 'libmp3lame', '-qscale:a', '0', '-ar', '48000', '-ac', '2']
-    elif ext == ".ogg":
-        encoding_args = ['-c:a', 'libvorbis', '-ar', '48000', '-b:a', '320k', '-ac', '2']
-    else:
-        encoding_args = ['-c:a', 'pcm_s16le', '-ar', '48000', '-b:a', '320k', '-ac', '2']
-
-    command = [
-        'ffmpeg', '-y',
-        '-i', left_path,
-        '-i', right_path,
-        '-filter_complex', filter_complex,
-        '-map', '[a]'
-    ] + encoding_args + [stereo_path]
-    logger.debug(f'[abus:ffmpeg_to_stereo] {command}')
-    subprocess.run(command, check=False)
+    encoding_options = "-c:a pcm_s16le -ar 48000 -b:a 320k -ac 2"
+    if ext==".flac":
+        encoding_options = "-c:a flac -ar 48000 -compression_level 0 -ac 2"
+    elif ext==".mp3":
+        encoding_options = "-c:a libmp3lame -qscale:a 0 -ar 48000 -ac 2"    # -ar 48000 -ab 320k
+    elif ext==".ogg":
+        encoding_options = "-c:a libvorbis -ar 48000 -b:a 320k -ac 2"        
+    
+    command = f'ffmpeg -y -i "{left_path}" -i "{right_path}" -filter_complex "{filter_complex}" -map "[a]" {encoding_options} "{stereo_path}"'
+    logger.debug(f'[abus:ffmpeg_join_to_stereo] {command}')
+    os.system(command)
     return True
 
 
