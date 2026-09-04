@@ -59,8 +59,11 @@ class MSVoice():
         return country
     
     def getCharacterName(self):
+        # The character is always the last segment: most names are
+        # lang-country-Character, but regional voices add a dialect
+        # segment (e.g. 'zh-CN-liaoning-XiaobeiNeural').
         words = self.name.split('-')
-        code = words[2]
+        code = words[-1]
         name = code.replace('Neural', '')
         return name
 
@@ -191,7 +194,7 @@ class MSVoiceManager():
         
         for voice in MS_VOICES:
             voice_parts = voice.name.split('-')
-            voice_name = voice_parts[2]
+            voice_name = voice_parts[-1]
             
             if voice.gender == gender and name+"Neural" == voice_name:
                 # logger.debug(f'[abus_voice_ms.py] get_voice - find!! displayName = {displayName}, voice = {voice}')
