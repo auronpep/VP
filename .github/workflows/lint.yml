@@ -1,0 +1,48 @@
+name: lint
+
+# Fast, dependency-free checks. Nothing here downloads models or installs torch,
+# so the whole job finishes in well under a minute.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    name: Python syntax and error lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      # Catches syntax errors in every first-party module, including ones that
+      # are only imported on a code path CI never reaches.
+      - name: Compile all first-party sources
+        run: python -m compileall -q app src one_click.py start-abus.py start-voice.py
+
+      - name: Install ruff
+        run: pip install ruff==0.16.6
+
+      # Deliberately a narrow rule set: real errors only, no style opinions.
+      #   E9   syntax / indentation errors
+      #   F63  invalid comparisons (e.g. `is` with a literal)
+      #   F7   syntax constructs that are always wrong (break outside loop, ...)
+      #   F82  undefined names - the NameError-at-runtime class
+      - name: Ruff (errors only)
+        run: ruff check app src one_click.py start-abus.py start-voice.py --select E9,F63,F7,F82
+
+  shell:
+    name: Shell script syntax
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: bash -n
+        run: |
+          for f in *.sh; do
+            echo "checking $f"
+            bash -n "$f"
+          done
