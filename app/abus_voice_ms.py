@@ -219,8 +219,6 @@ class MSVoiceManager():
 MS_VOICES = [
     MSVoice('af-ZA-AdriNeural', 'Female'),
     MSVoice('af-ZA-WillemNeural', 'Male'),
-    MSVoice('af-ZA-AdriNeural', 'Female'),
-    MSVoice('af-ZA-WillemNeural', 'Male'),
     MSVoice('am-ET-AmehaNeural', 'Male'),
     MSVoice('am-ET-MekdesNeural', 'Female'),
     MSVoice('ar-AE-FatimaNeural', 'Female'),
