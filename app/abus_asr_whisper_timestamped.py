@@ -102,7 +102,7 @@ class WhisperTimestampedInference:
                         progress=None,
                         ) -> list:
         try:
-            with create_progress_listener_handle(PrintingProgressListener(progress)) as listener: 
+            with create_progress_listener_handle(PrintingProgressListener(progress)): 
                 # transcribed_segments, time_for_task = self.transcribe(input_path, params.copy(), progress)
                 # subtitles = self.generate_and_write_file(input_path, transcribed_segments, highlight_words)        
                 result, time_for_task = self.transcribe(input_path, params.copy(), progress)
