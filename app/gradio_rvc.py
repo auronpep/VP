@@ -33,7 +33,7 @@ class GradioRVC:
         self.rvc = RVC()
      
         self.mdxnet_models_dir = os.path.join(os.getcwd(), 'model', 'mdxnet-model')
-        with open(os.path.join(self.mdxnet_models_dir, 'model_data.json')) as infile:
+        with open(os.path.join(self.mdxnet_models_dir, 'model_data.json'), encoding='utf-8') as infile:
             self.mdx_model_params = json.load(infile)
             
             
