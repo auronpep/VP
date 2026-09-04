@@ -1,3 +1,8 @@
 *.pt filter=lfs diff=lfs merge=lfs -text
 *.pth filter=lfs diff=lfs merge=lfs -text
 *.index filter=lfs diff=lfs merge=lfs -text
+
+# Line endings: shell scripts must stay LF or they break the bash shebang on
+# Linux/macOS; batch files are checked out CRLF as Windows expects.
+*.sh text eol=lf
+*.bat text eol=crlf
