@@ -325,7 +325,9 @@ class OneClick():
         if not cls.is_macos() and selected_gpu == 'CPU':
             if not cls.check_package_installed('torch'):
                 cls.oc_print_big_message("Installing PyTorch via pip")
-                cls.oc_run_cmd(f"python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1", assert_success=True, environment=True)
+                cls.oc_run_cmd("python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 "
+                               "--index-url https://download.pytorch.org/whl/cpu",
+                               assert_success=True, environment=True)
 
 
     @classmethod
