@@ -256,8 +256,7 @@ class WhisperTimestampedInference:
         except Exception as e:
             logger.error(f"[abus_asr_whisper_timestamped.py] write_file - An error occurred: {e}")
 
-        finally:
-            return subtitles
+        return subtitles
 
 
     @staticmethod
