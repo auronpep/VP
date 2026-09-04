@@ -48,7 +48,7 @@ class HF_File():
                 os.makedirs(download_folder, exist_ok=True)
 
             download_file_path = os.path.join(download_folder, self.file_name)
-            if self.has_local_file() == False:                                
+            if not self.has_local_file():                                
                 shutil.copy(hf_download_path, download_file_path)
                 logger.debug(f'[abus_hf_file.py] download - download complete : {download_file_path}')    
             

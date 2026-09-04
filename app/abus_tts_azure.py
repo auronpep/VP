@@ -72,7 +72,7 @@ class AzureTTS:
         # Checks result.
         if result.reason == speechsdk.ResultReason.SynthesizingAudioCompleted:
             success, msg = self._validate_file(output_file)
-            if True == success:
+            if success:
                 logger.debug("Speech synthesized to speaker for text [{}]".format(text))
                 return True
             else:
@@ -101,7 +101,7 @@ class AzureTTS:
         
         logger.debug(f'[abus_tts_azure.py] request_tts - line = {line}')
         
-        if False == self.generate_audio(line, voice_name, output_voice_file, rate=speed_factor, volume=volume_factor, pitch=semitones):
+        if not self.generate_audio(line, voice_name, output_voice_file, rate=speed_factor, volume=volume_factor, pitch=semitones):
             logger.warning(f"[abus_tts_azure.py] request_tts - error: API returns False")
             return False
                 

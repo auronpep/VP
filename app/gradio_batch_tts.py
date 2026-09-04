@@ -139,7 +139,7 @@ class GradioBatchTTS:
 
     def _upload_file_batch(self,
                 source_file, audio_format: str):
-        if os.path.exists(source_file) == False:
+        if not os.path.exists(source_file):
             return None
                 
         fm = FileManager()

@@ -156,7 +156,7 @@ class ParallelTextGenerator:
         self.target_language = target_language
         
        
-        self.translator = AzureTranslator() if azure_text_api_working() == True else DeepTranslator()
+        self.translator = AzureTranslator() if azure_text_api_working() else DeepTranslator()
         
         self.segments = []
         self.vtt_source = ""

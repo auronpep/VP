@@ -20,7 +20,7 @@ class GradioTranslate:
     def __init__(self, user_config: UserConfig):
         self.user_config = user_config
 
-        self.translator = AzureTranslator() if azure_text_api_working() == True else DeepTranslator()
+        self.translator = AzureTranslator() if azure_text_api_working() else DeepTranslator()
 
             
     def gradio_workspace_folder(self):

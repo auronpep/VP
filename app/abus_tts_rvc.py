@@ -69,7 +69,7 @@ class TTSRVC:
                 combined_rvc_audio += silence
 
             tts_segment_file = os.path.join(tts_segments_folder, f'tts_{i+1:06}.{audio_format}')    
-            if False == self.tts.line_to_voice(line.text, tts_segment_file, tts_voice, semitones, speed_factor, volume_factor, audio_format):
+            if not self.tts.line_to_voice(line.text, tts_segment_file, tts_voice, semitones, speed_factor, volume_factor, audio_format):
                 silence = AudioSegment.silent(duration=next_line.start-line.start)
                 combined_tts_audio += silence
                 combined_rvc_audio += silence

@@ -351,7 +351,7 @@ class OneClick():
         cls.oc_run_cmd("conda config --show channels", environment=True)
         
         if app_name in ["gulliver", "voice"]:
-            if cls.check_package_installed('pynini') == False:
+            if not cls.check_package_installed('pynini'):
                 cls.oc_print_big_message("Installing pynini from conda-forge")
                 # Retry logic for network issues
                 max_retries = 3
