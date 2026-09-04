@@ -282,7 +282,9 @@ class AbusText():
         cleaned_text = re.sub(r'(\.)\1+', r'.', cleaned_text)
         
         # 5. 연속 공백 및 단어 반복 제거
-        cleaned_text = re.sub(r'\b(\w+)\s+\1\b', r'\1', cleaned_text)
+        # Collapse 3+ repeats only: two in a row is usually grammatical
+        # ("I had had enough", "that that was wrong", "Sing Sing").
+        cleaned_text = re.sub(r'\b(\w+)(?:\s+\1\b){2,}', r'\1', cleaned_text)
         cleaned_text = re.sub(r'\s+', ' ', cleaned_text).strip()
         
         logger.debug(f"[abus_text.py] normalize_text - cleaned: {cleaned_text}")
