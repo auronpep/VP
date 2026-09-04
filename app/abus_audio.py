@@ -65,7 +65,7 @@ class AbusAudio():
             for i in range(0, len(reversed_audio), chunk_size):
                 chunk = reversed_audio[i:i + chunk_size]
                 if chunk.dBFS > threshold and chunk.dBFS != float('-inf'):
-                    return len(asg) - (i + chunk_size)
+                    return len(asg) - i
             return 0  # 모두 무음이면 0 반환
 
         # 시작과 끝 부분의 무음 인덱스 탐지
