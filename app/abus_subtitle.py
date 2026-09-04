@@ -100,6 +100,8 @@ def parse_srt(file_path):
     for block in blocks:
         if block.strip() != '':
             lines = block.strip().split('\n')
+            if len(lines) < 2:
+                continue
             index = lines[0]
             timestamp = lines[1]
             sentence = ' '.join(lines[2:])
@@ -121,8 +123,10 @@ def parse_vtt(file_path):
     blocks = webvtt_data.split('\n\n')
 
     for block in blocks:
-        if block.strip() != '' and not block.strip().startswith("WebVTT"):
+        if block.strip() != '' and not block.strip().upper().startswith("WEBVTT"):
             lines = block.strip().split('\n')
+            if len(lines) < 2:
+                continue
             index = lines[0]
             timestamp = lines[1]
             sentence = ' '.join(lines[2:])
