@@ -1,20 +1,27 @@
 import re
 
 
+def _split_timestamp(time):
+    """Splits a duration in seconds into (hours, minutes, seconds, milliseconds).
+
+    Rounds to the nearest millisecond and carries correctly, so 1.2299999 and
+    1.2300001 both land on 1,230 rather than truncating to 1,229.
+    """
+    total_ms = int(round(max(0.0, time) * 1000))
+    hours, remainder = divmod(total_ms, 3600_000)
+    minutes, remainder = divmod(remainder, 60_000)
+    seconds, milliseconds = divmod(remainder, 1000)
+    return hours, minutes, seconds, milliseconds
+
+
 def timeformat_srt(time):
-    hours = time // 3600
-    minutes = (time - hours * 3600) // 60
-    seconds = time - hours * 3600 - minutes * 60
-    milliseconds = (time - int(time)) * 1000
-    return f"{int(hours):02d}:{int(minutes):02d}:{int(seconds):02d},{int(milliseconds):03d}"
+    hours, minutes, seconds, milliseconds = _split_timestamp(time)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d},{milliseconds:03d}"
 
 
 def timeformat_vtt(time):
-    hours = time // 3600
-    minutes = (time - hours * 3600) // 60
-    seconds = time - hours * 3600 - minutes * 60
-    milliseconds = (time - int(time)) * 1000
-    return f"{int(hours):02d}:{int(minutes):02d}:{int(seconds):02d}.{int(milliseconds):03d}"
+    hours, minutes, seconds, milliseconds = _split_timestamp(time)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d}.{milliseconds:03d}"
 
 
 def write_file(subtitle, output_file):
