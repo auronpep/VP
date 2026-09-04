@@ -184,7 +184,7 @@ class AzureTranslator:
 
 
         try:
-            response = requests.post(constructed_url, params=params, headers=headers, json=body)
+            response = requests.post(constructed_url, params=params, headers=headers, json=body, timeout=30)
             response_data = response.json()
             # logger.debug(f'==> response_data = {response_data}')
             # logger.debug(f'==> response.status_code = {response.status_code}')
