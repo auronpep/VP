@@ -72,7 +72,7 @@ class OneClick():
                     if retry_count > 0:
                         print(f"Retrying PyTorch update (attempt {retry_count + 1}/{max_retries})...")
                         time.sleep(5)
-                    success = cls.oc_run_cmd(f"conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 -c pytorch", assert_success=False, environment=True)
+                    success = cls.oc_run_cmd("conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 -c pytorch", assert_success=False, environment=True)
                     retry_count += 1
                 
                 if not success:
@@ -325,9 +325,7 @@ class OneClick():
         if not cls.is_macos() and selected_gpu == 'CPU':
             if not cls.check_package_installed('torch'):
                 cls.oc_print_big_message("Installing PyTorch via pip")
-                cls.oc_run_cmd("python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 "
-                               "--index-url https://download.pytorch.org/whl/cpu",
-                               assert_success=True, environment=True)
+                cls.oc_run_cmd("python -m pip install torch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1", assert_success=True, environment=True)
 
 
     @classmethod
@@ -364,17 +362,17 @@ class OneClick():
                     
                     # Try installing with explicit channel specification
                     # Use --strict-channel-priority to ensure we get from conda-forge
-                    success = cls.oc_run_cmd(f"conda install -y -c conda-forge --strict-channel-priority pynini==2.1.5", assert_success=False, environment=True)
+                    success = cls.oc_run_cmd("conda install -y -c conda-forge --strict-channel-priority pynini==2.1.5", assert_success=False, environment=True)
                     
                     if not success:
                         # Try without strict priority (more flexible)
                         print("Trying with flexible channel priority...")
-                        success = cls.oc_run_cmd(f"conda install -y -c conda-forge pynini==2.1.5", assert_success=False, environment=True)
+                        success = cls.oc_run_cmd("conda install -y -c conda-forge pynini==2.1.5", assert_success=False, environment=True)
                     
                     if not success:
                         # Try alternative: use defaults channel as fallback
                         print("Trying alternative installation method (defaults channel)...")
-                        success = cls.oc_run_cmd(f"conda install -y pynini==2.1.5", assert_success=False, environment=True)
+                        success = cls.oc_run_cmd("conda install -y pynini==2.1.5", assert_success=False, environment=True)
                     
                     retry_count += 1
                 
@@ -399,7 +397,7 @@ class OneClick():
                         print(f"Retrying PyTorch installation (attempt {retry_count + 1}/{max_retries})...")
                         time.sleep(5)  # Wait before retry
                     
-                    success = cls.oc_run_cmd(f"conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 -c pytorch", assert_success=False, environment=True)
+                    success = cls.oc_run_cmd("conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 -c pytorch", assert_success=False, environment=True)
                     retry_count += 1
                 
                 if not success:
@@ -416,8 +414,8 @@ class OneClick():
                 if not cls.oc_run_cmd(verify_cmd, environment=True):
                     cls.oc_print_big_message("PyTorch installation verification failed. Reinstalling...")
                     # Remove and reinstall
-                    cls.oc_run_cmd(f"conda remove -y pytorch torchvision torchaudio", environment=True)
-                    cls.oc_run_cmd(f"conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 -c pytorch", assert_success=True, environment=True)
+                    cls.oc_run_cmd("conda remove -y pytorch torchvision torchaudio", environment=True)
+                    cls.oc_run_cmd("conda install -y pytorch==2.5.1 torchvision==0.20.1 torchaudio==2.5.1 -c pytorch", assert_success=True, environment=True)
                     # Verify again
                     if not cls.oc_run_cmd(verify_cmd, environment=True):
                         print("Warning: PyTorch installation may have issues. Continuing anyway...")
@@ -431,7 +429,7 @@ class OneClick():
             if retry_count > 0:
                 print(f"Retrying ninja/git installation (attempt {retry_count + 1}/{max_retries})...")
                 time.sleep(5)
-            success = cls.oc_run_cmd(f"conda install -y -k ninja git", assert_success=False, environment=True)
+            success = cls.oc_run_cmd("conda install -y -k ninja git", assert_success=False, environment=True)
             retry_count += 1
         
         if not success:
@@ -440,7 +438,7 @@ class OneClick():
         # Remove nomkl and install mkl
         # nomkl may not be installed, so don't fail if it's not found
         print("Removing nomkl (if present)...")
-        cls.oc_run_cmd("conda remove --force --yes nomkl", environment=True)
+        cls.oc_run_cmd('conda remove --force --yes nomkl 2>&1 || true', environment=True)
         
         # Install mkl with retry logic
         max_retries = 3
@@ -450,7 +448,7 @@ class OneClick():
             if retry_count > 0:
                 print(f"Retrying mkl installation (attempt {retry_count + 1}/{max_retries})...")
                 time.sleep(5)
-            success = cls.oc_run_cmd(f'conda install --yes mkl -c anaconda', assert_success=False, environment=True)
+            success = cls.oc_run_cmd('conda install --yes mkl -c anaconda', assert_success=False, environment=True)
             retry_count += 1
         
         if not success:
