@@ -182,7 +182,7 @@ class AbusText():
             return [line.strip() for line in text.split('\n') if line.strip()]
             
         # 문장 끝 패턴을 정의 (.!? 뒤에 공백이나 문장의 끝)
-        sentence_ends = re.compile(r'[.。．!！?？۔।॥]+[\s$]')
+        sentence_ends = re.compile(r'[。．！？۔।॥]+|[.!?]+(?=\s|$)')
         
         # 문장의 시작 위치를 찾음
         start_positions = [0] + [m.end() for m in sentence_ends.finditer(text)]
