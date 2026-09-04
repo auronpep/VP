@@ -212,7 +212,6 @@ class AbusStanza:
         if any(text.endswith(mark) for mark in ['.', '!', '?', '。', '！', '？', '…']):
             return text
         try:
-            doc = nlp(text)
             is_question = False
             if lang in ('en', 'es', 'fr', 'de', 'it', 'pt'):
                 wh_words = ['what', 'who', 'where', 'when', 'why', 'how', 'which']
