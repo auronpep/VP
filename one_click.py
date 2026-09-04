@@ -45,7 +45,8 @@ class OneClick():
                 break
 
         if site_packages_path:
-            torch_version_file = open(os.path.join(site_packages_path, 'torch', 'version.py')).read().splitlines()
+            with open(os.path.join(site_packages_path, 'torch', 'version.py'), encoding='utf-8') as f:
+                torch_version_file = f.read().splitlines()
             torver = [line for line in torch_version_file if line.startswith('__version__')][0].split('__version__ = ')[1].strip("'")
         else:
             from torch import __version__ as torver
