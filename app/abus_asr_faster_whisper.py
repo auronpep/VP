@@ -263,7 +263,7 @@ class FasterWhisperInference:
             subtitles.append(txt_path)
             logger.debug(f'[abus_asr_faster_whisper.py] generate_and_write_file - append {txt_path}')
 
-            if highlight_words == True:
+            if highlight_words:
                 srt_path = path_change_ext(input_path, '.srt')
                 ts_contents = get_srt_wordlevel(transcribed_segments)
                 write_file(ts_contents, srt_path)

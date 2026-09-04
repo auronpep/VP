@@ -167,18 +167,11 @@ class WhisperLive:
                     self.audio_queue.put(audio)
                     self.total_audio = np.concatenate((self.total_audio, audio), axis=0)
 
-                    if self.stop_event.is_set() == True:
-                        logger.debug(f'[ABUS_LIVE] _thread_put_audio exit....')
-                        time.sleep(0.1)
-                        break
-        except Exception as e:
-            logger.error(f'[ABUS_LIVE] _thread_put_audio - An error occurred: {e}')
-        finally:
-            # Always send the sentinel, including when the recorder never opened,
-            # otherwise the consumer blocks forever and stop_thread() cannot join.
-            audio_queue = self.audio_queue
-            if audio_queue is not None:
-                audio_queue.put(None)
+                if self.stop_event.is_set():
+                    self.audio_queue.put(None)
+                    logger.debug(f'[ABUS_LIVE] _thread_put_audio exit....')
+                    time.sleep(0.1)
+                    break
 
     def _thread_get_audio(self):
         audio_queue = self.audio_queue
@@ -206,7 +199,7 @@ class WhisperLive:
                 self.frames_np = None
                 time.sleep(0.1)
             elif audio_length > 2.0:
-                if vad == False:
+                if not vad:
                     logger.debug(f'[ABUS_LIVE] _thread_get_audio 1.0 EOS')                
                     self.run_asr(self.frames_np, self.whisper_params, self.timestamp_offset)
                     self.frames_np = None

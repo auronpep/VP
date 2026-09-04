@@ -241,7 +241,7 @@ class AbusText():
         
         match_count = 0
         for text in lines:
-            if cls.check_sentence_ending(text) == True:
+            if cls.check_sentence_ending(text):
                 match_count += 1
         
         # 최소한 5줄당 1번은 마침표가 나와야 True        
