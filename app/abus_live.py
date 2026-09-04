@@ -198,8 +198,8 @@ class WhisperLive:
                 self.frames_np = None
                 time.sleep(0.1)
             elif audio_length > 2.0:
-                if not vad:
-                    logger.debug(f'[ABUS_LIVE] _thread_get_audio 1.0 EOS')                
+                if vad == False:
+                    logger.debug('[ABUS_LIVE] _thread_get_audio 1.0 EOS')                
                     self.run_asr(self.frames_np, self.whisper_params, self.timestamp_offset)
                     self.frames_np = None
                     time.sleep(0.1)
