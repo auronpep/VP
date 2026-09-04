@@ -31,6 +31,12 @@ def run_mdx(model_params, output_dir, model_path, filename, exclude_main=False, 
 
     model_hash = MDX.get_hash(model_path)
     mp = model_params.get(model_hash)
+    if mp is None:
+        raise KeyError(
+            f"Unknown MDX model hash {model_hash} for {model_path}. "
+            "This checkpoint is not listed in model_data.json."
+        )
+
     model = MDXModel(
         device,
         dim_f=mp["mdx_dim_f_set"],
