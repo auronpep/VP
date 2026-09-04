@@ -118,7 +118,7 @@ class OneClick():
                 # Use a clean environment to test import
                 test_cmd = 'python -c "import sys; sys.path.insert(0, \'\'); import torch; assert hasattr(torch, \'_C\') or hasattr(torch, \'__version__\')"'
                 return cls.oc_run_cmd(test_cmd, environment=True, capture_output=True)
-            except:
+            except Exception:
                 # If import test fails, assume not properly installed
                 return False
         else:
