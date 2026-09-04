@@ -84,7 +84,7 @@ def get_txt(segments):
 
 def parse_srt(file_path):
     """Reads SRT file and returns as dict"""
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, 'r', encoding='utf-8-sig') as file:
         srt_data = file.read()
 
     data = []
@@ -107,7 +107,7 @@ def parse_srt(file_path):
 
 def parse_vtt(file_path):
     """Reads WebVTT file and returns as dict"""
-    with open(file_path, 'r', encoding='utf-8') as file:
+    with open(file_path, 'r', encoding='utf-8-sig') as file:
         webvtt_data = file.read()
 
     data = []
