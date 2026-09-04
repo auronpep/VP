@@ -166,6 +166,8 @@ class AbusSpacy:
         
         event_starts = [e.start for e in events if e.plaintext.strip()]
         event_ends = [e.end for e in events if e.plaintext.strip()]
+        if not event_starts or not full_text:
+            return []
         total_duration = event_ends[-1] - event_starts[0]
         total_chars = len(full_text)
         
