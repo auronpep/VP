@@ -115,6 +115,26 @@ class AbusText():
             return False
     
     
+    # Scripts that are normally written without spaces between words.
+    NON_SPACING_RANGES = (
+        (0x3040, 0x30FF),   # Hiragana / Katakana
+        (0x3400, 0x4DBF),   # CJK Unified Ideographs Extension A
+        (0x4E00, 0x9FFF),   # CJK Unified Ideographs
+        (0xF900, 0xFAFF),   # CJK Compatibility Ideographs
+        (0x0E00, 0x0E7F),   # Thai
+        (0x0E80, 0x0EFF),   # Lao
+        (0x1780, 0x17FF),   # Khmer
+    )
+
+    @classmethod
+    def is_non_spacing_text(cls, text):
+        """True when the text uses a script that is written without spaces."""
+        return any(
+            low <= ord(char) <= high
+            for char in text
+            for low, high in cls.NON_SPACING_RANGES
+        )
+
     @classmethod
     def split_text(cls, text, line_count):
         """텍스트를 라인 수에 맞게 분할하는 함수. 모든 언어 지원."""
@@ -123,7 +143,7 @@ class AbusText():
 
         # 공백으로 단어 분할이 가능한 언어인지 확인
         words = text.split()
-        if len(words) > 1 and all(len(word) > 0 for word in words):
+        if len(words) > 1 or not cls.is_non_spacing_text(text):
             # 공백 기반 언어(영어 등): 기존 단어 단위 분할 유지
             total_units = len(words)
             avg_units_per_line = total_units // line_count
