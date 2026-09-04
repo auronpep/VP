@@ -143,7 +143,7 @@ class AzureTTS:
             tts_segment_file = os.path.join(segments_folder, f'tts_{i+1}.{audio_format}')
             tts_result = self.request_tts(line.text, tts_segment_file, voice_name, semitones, speed_factor, volume_factor, audio_format)
 
-            if tts_result == False:
+            if not tts_result:
                 if next_line:
                     silence = AudioSegment.silent(duration=next_line.start-line.start)
                     combined_audio += silence
@@ -174,7 +174,7 @@ class AzureTTS:
         for i in progress.tqdm(range(len(lines)), desc='Generating...'):
             tts_segment_file = os.path.join(segments_folder, f'tts_{i+1:06}.{audio_format}')    
             tts_result = self.request_tts(lines[i], tts_segment_file, voice_name, semitones, speed_factor, volume_factor, audio_format)
-            if tts_result == False:
+            if not tts_result:
                 continue
             combined_audio += AudioSegment.from_file(tts_segment_file)
             
