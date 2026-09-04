@@ -1,8 +1,5 @@
 import os
 import sys
-from pathlib import Path
-import random
-import requests
 
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
