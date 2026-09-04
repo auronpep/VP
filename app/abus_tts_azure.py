@@ -24,19 +24,18 @@ class AzureTTS:
         self.speech_config = speechsdk.SpeechConfig(subscription=speech_key, region=service_region)
         
 
-    def speech_synthesis_get_available_voices(self):
-        """gets the available voices list."""
+    def speech_synthesis_get_available_voices(self, locale: str = ""):
+        """gets the available voices list.
+
+        locale: a BCP-47 locale (e.g. "en-US") to filter by, or "" for all locales.
+        """
 
         # Creates a speech synthesizer.
         speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=self.speech_config, audio_config=None)
 
-        logger.debug("Enter a locale in BCP-47 format (e.g. en-US) that you want to get the voices of, or enter empty to get voices in all locales.")
-        try:
-            text = input()
-        except EOFError:
-            pass
+        logger.debug(f'[abus_tts_azure.py] speech_synthesis_get_available_voices - locale = {locale or "(all)"}')
 
-        result = speech_synthesizer.get_voices_async(text).get()
+        result = speech_synthesizer.get_voices_async(locale).get()
         # Check result
         if result.reason == speechsdk.ResultReason.VoicesListRetrieved:
             logger.debug('Voices successfully retrieved, they are:')
