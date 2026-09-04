@@ -117,7 +117,11 @@ class AzureTranslator:
         tts_source_file = path_add_postfix(subtitle_file_path, f"-{source_lang}", ".srt")
         
         # AbusText.process_subtitle_for_tts(subtitle_file_path, tts_source_file)
-        AbusSpacy.process_subtitle_for_tts(subtitle_file_path, tts_source_file)
+        if not AbusSpacy.process_subtitle_for_tts(subtitle_file_path, tts_source_file):
+            raise RuntimeError(
+                f"Subtitle preprocessing failed for {subtitle_file_path}. "
+                "See the log for details."
+            )
         
         # Load subtitles using pysubs2
         full_subs = pysubs2.load(tts_source_file)
