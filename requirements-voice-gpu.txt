@@ -5,6 +5,8 @@ wget
 openai-whisper==20240930
 faster-whisper==1.1.0
 whisperx==3.3.1
+# NOTE: whisperx 3.3.1 caps ctranslate2 below 4.5.0, and ctranslate2 < 4.5 is
+#       built against cuDNN 8 - see the nvidia-cudnn-cu12 pin further down.
 whisper-timestamped==1.15.8
 matplotlib
 ffmpeg-python==0.2.0
@@ -78,6 +80,12 @@ misaki[zh]
 # spaCy
 spacy[cuda12x]==3.7.5
 # etc
-onnxruntime-gpu==1.20.2
+onnxruntime-gpu==1.20.1
+# Required by ctranslate2 < 4.5 (pulled in by whisperx/faster-whisper), which is
+# built against cuDNN 8. Do NOT delete this pin to resolve a pip conflict: it is
+# what makes GPU transcription work.
+# KNOWN CONFLICT (Linux only): torch 2.5.1 requires nvidia-cudnn-cu12==9.1.0.70 on
+# linux_x86_64, so the two cannot both resolve there. On Windows torch bundles its
+# own CUDA libraries and declares no nvidia-* dependencies, so this pin is fine.
 nvidia-cudnn-cu12==8.9.7.29
 python-dotenv
