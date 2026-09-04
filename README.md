@@ -568,3 +568,7 @@ ABUS Customer Service
 ## ©️ Copyright
   <img src="docs/images/ABUS-logo.jpg" width="100" height="100"> by [ABUS](https://www.wctokyoseoul.com)
 
+## Maintainers
+
+- auronpep (owner)
+- VoteWood (write)
