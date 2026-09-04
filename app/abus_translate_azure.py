@@ -198,7 +198,8 @@ class AzureTranslator:
                 error = response_data['error']
                 # error_msg = f'translate_text_webapi : {error["message"]} ({error["code"]})'
                 return error["message"]
-        except:
+        except Exception as e:
+            logger.error(f'[abus_translate_azure.py] translate_text_webapi - request failed: {e}')
             return "Error"
             
         
