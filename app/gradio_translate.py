@@ -42,7 +42,7 @@ class GradioTranslate:
  
 
     def gradio_save(self, file_obj, source_lang, target_lang, src_text, target_text):
-        logger.debug(f'[GradioTranslate] gradio_save')
+        logger.debug('[GradioTranslate] gradio_save')
         message = i18n("Saving files...")
         gr.Info(message)
         

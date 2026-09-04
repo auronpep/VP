@@ -120,7 +120,7 @@ class GradioTTSRVC:
     
     
     def gradio_save(self, file_obj, target_lang, audio_format, text, audio_obj):
-        logger.debug(f'[gradio_tts_rvc.py] gradio_save')
+        logger.debug('[gradio_tts_rvc.py] gradio_save')
         message = i18n("Saving files...")
         gr.Info(message)
         

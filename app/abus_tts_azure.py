@@ -96,13 +96,13 @@ class AzureTTS:
         output_voice_file = os.path.join(path_dubbing_folder(), path_new_filename(ext = ".mp3"))
         line = AbusText.normalize_text(line)
         if len(line) < 1:
-            logger.warning(f"[abus_tts_azure.py] request_tts - error: no line")
+            logger.warning("[abus_tts_azure.py] request_tts - error: no line")
             return False
         
         logger.debug(f'[abus_tts_azure.py] request_tts - line = {line}')
         
-        if not self.generate_audio(line, voice_name, output_voice_file, rate=speed_factor, volume=volume_factor, pitch=semitones):
-            logger.warning(f"[abus_tts_azure.py] request_tts - error: API returns False")
+        if False == self.generate_audio(line, voice_name, output_voice_file, rate=speed_factor, volume=volume_factor, pitch=semitones):
+            logger.warning("[abus_tts_azure.py] request_tts - error: API returns False")
             return False
                 
         trimed_voice_file = path_add_postfix(output_voice_file, "_trimed")

@@ -29,15 +29,8 @@ def demucs_split_file(input_path: str, output_dir, demucs_model: str, audio_form
     demucs_inst_file = os.path.join(temp_directory, demucs_model, file_name, "no_vocals.wav")
     demucs_vocal_file = os.path.join(temp_directory, demucs_model, file_name, "vocals.wav")
 
-    command = [
-        sys.executable, '-m', 'demucs.separate',
-        '-n', demucs_model,
-        '--two-stems=vocals',
-        input_path,
-        '-o', temp_directory,
-        output_option,
-        '--repo', 'model/demucs',
-    ]
+    command = f'python -m demucs.separate -n {demucs_model} --two-stems=vocals "{input_path}" -o "{temp_directory}" {output_option}'
+    command += ' --repo model/demucs'
     logger.debug(f'[abus:demucs_split_file] {command}')
     
     with subprocess.Popen(command, text=True, stderr=subprocess.PIPE, bufsize=1, universal_newlines=True) as sp:

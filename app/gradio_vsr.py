@@ -86,12 +86,12 @@ class GradioVSR:
         self.user_config.set("compression_preset", compression_preset)  
         
         try:            
-            if not self.has_video:
-                logger.error(f"[gradio_vsr.py] run_maxine - invalid video")
+            if self.has_video == False:
+                logger.error("[gradio_vsr.py] run_maxine - invalid video")
                 return None, None
             
             
-            working_file = os.path.join(path_gradio_folder(), path_new_filename(ext = f".mkv", format = "%Y%m%d-%H%M%S%f"))
+            working_file = os.path.join(path_gradio_folder(), path_new_filename(ext = ".mkv", format = "%Y%m%d-%H%M%S%f"))
             cmd_copy_file(self.source_file, working_file)
             
             input_temp_file = working_file
@@ -103,8 +103,8 @@ class GradioVSR:
                 output_var_file = path_add_postfix(working_file, "_var")
                 
                 success = self.video_artifact_reduction(working_file, output_var_file, var_mode)
-                if not success:
-                    logger.error(f"[gradio_vsr.py] video_artifact_reduction - failed")
+                if success == False:
+                    logger.error("[gradio_vsr.py] video_artifact_reduction - failed")
                     return None, None
                 else:
                     working_file = output_var_file
@@ -114,8 +114,8 @@ class GradioVSR:
                 vsr_scale = float(vsr_scale)
                 
                 success = self.video_super_res(working_file, output_vsr_file, vsr_mode, vsr_scale)
-                if not success:
-                    logger.error(f"[gradio_vsr.py] video_super_res - failed")
+                if success == False:
+                    logger.error("[gradio_vsr.py] video_super_res - failed")
                     return None, None
                 else:
                     working_file = output_vsr_file  
@@ -123,8 +123,8 @@ class GradioVSR:
             if compression_enable:
                 output_compress_file = path_add_postfix(working_file, "_compress")    
                 success = self.video_compress(working_file, output_compress_file, None, int(compression_crf), compression_preset)
-                if not success:
-                    logger.error(f"[gradio_vsr.py] video_compress - failed")
+                if success == False:
+                    logger.error("[gradio_vsr.py] video_compress - failed")
                     return None, None
                 else:
                     working_file = output_compress_file           
@@ -201,13 +201,13 @@ class GradioVSR:
     def _supported_resolution(self, input_path, vsr_scale):
         resolution = ffmpeg_video_resolution(input_path)
         if resolution is None:
-            logger.warning(f"[gradio_vsr.py] _supported_resolution - invalid resolution")
+            logger.warning("[gradio_vsr.py] _supported_resolution - invalid resolution")
             return None        
 
         width, height = resolution        
         _supported_scales = self._supported_scales(height)
         if len(_supported_scales) == 0:
-            logger.warning(f"[gradio_vsr.py] _supported_resolution - invalid resolution")
+            logger.warning("[gradio_vsr.py] _supported_resolution - invalid resolution")
             return None
 
         if vsr_scale in _supported_scales:
@@ -222,7 +222,7 @@ class GradioVSR:
     def video_super_res(self, input_path, output_path, vsr_mode, vsr_scale):
         vsr_resolution = self._supported_resolution(input_path, vsr_scale)
         if vsr_resolution == None:
-            logger.error(f'[gradio_vsr.py] video_super_res - vsr_resolution is None')
+            logger.error('[gradio_vsr.py] video_super_res - vsr_resolution is None')
             return False            
 
 

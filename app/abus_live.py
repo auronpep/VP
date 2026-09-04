@@ -159,17 +159,16 @@ class WhisperLive:
 
 
     def _thread_put_audio(self):
-        logger.debug(f'[ABUS_LIVE] _thread_put_audio')
-        try:
-            with self.device.recorder(samplerate=self.sample_rate, channels=self.channels) as mic:
-                while True:
-                    audio = mic.record(self.chunk_size)
-                    self.audio_queue.put(audio)
-                    self.total_audio = np.concatenate((self.total_audio, audio), axis=0)
+        logger.debug('[ABUS_LIVE] _thread_put_audio')
+        with self.device.recorder(samplerate=self.sample_rate, channels=self.channels) as mic:
+            while True:
+                audio = mic.record(self.chunk_size)          
+                self.audio_queue.put(audio)
+                self.total_audio = np.concatenate((self.total_audio, audio), axis=0)
 
                 if self.stop_event.is_set():
                     self.audio_queue.put(None)
-                    logger.debug(f'[ABUS_LIVE] _thread_put_audio exit....')
+                    logger.debug('[ABUS_LIVE] _thread_put_audio exit....')
                     time.sleep(0.1)
                     break
 
@@ -182,7 +181,7 @@ class WhisperLive:
                 continue
             if audio is None:  # 종료 신호
                 self.frames_np = None
-                logger.debug(f'[ABUS_LIVE] _thread_get_audio exit....')
+                logger.debug('[ABUS_LIVE] _thread_get_audio exit....')
                 time.sleep(0.1)
                 break        
 
@@ -194,13 +193,13 @@ class WhisperLive:
             vad = self.voice_activity(mono)
             
             if audio_length >= 5.5:
-                logger.debug(f'[ABUS_LIVE] _thread_get_audio 5.5')
+                logger.debug('[ABUS_LIVE] _thread_get_audio 5.5')
                 self.run_asr(self.frames_np, self.whisper_params, self.timestamp_offset)
                 self.frames_np = None
                 time.sleep(0.1)
             elif audio_length > 2.0:
-                if not vad:
-                    logger.debug(f'[ABUS_LIVE] _thread_get_audio 1.0 EOS')                
+                if vad == False:
+                    logger.debug('[ABUS_LIVE] _thread_get_audio 1.0 EOS')                
                     self.run_asr(self.frames_np, self.whisper_params, self.timestamp_offset)
                     self.frames_np = None
                     time.sleep(0.1)

@@ -74,7 +74,7 @@ def create_app_footer():
     torch_version = torch.__version__
 
     
-    footer_items = [f"🔊 [rtx-upscaler](https://github.com/abus-aikorea/rtx-upscaler)"]
+    footer_items = ["🔊 [rtx-upscaler](https://github.com/abus-aikorea/rtx-upscaler)"]
     footer_items.append(f"python: `{python_version}`")
     footer_items.append(f"torch: `{torch_version}`")
     footer_items.append(f"gradio: `{gradio_version}`")
