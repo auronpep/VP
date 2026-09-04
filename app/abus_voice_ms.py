@@ -57,7 +57,7 @@ class MSVoice():
         return code
     
     def getCountryName(self):
-        country = CC[self.getCountryCode()]
+        country = CC.get(self.getCountryCode(), self.getCountryCode())
         return country
     
     def getCharacterName(self):
