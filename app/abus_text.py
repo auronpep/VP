@@ -144,7 +144,8 @@ class AbusText():
         else:
             # 공백이 없는 언어(일본어, 중국어 등): 문자 단위로 분할
             # 문장 부호를 기준으로 자연스럽게 나누기 위해 정규식 사용            
-            units = re.findall(r'[^\s.。．!！?？۔।॥,，、;；:：「」“”‘’「」『』()[]…—–-・·]+[.。．!！?？۔।॥,，、;；:：「」“”‘’「」『』()[]…—–-・·]*|\s+', text.strip())
+            punctuation = r'.。．!！?？۔।॥,，、;；:：「」“”‘’『』()\[\]…—–・·\-'
+            units = re.findall(rf'[^\s{punctuation}]+[{punctuation}]*|\s+', text.strip())
             total_units = len(units)
             
             if total_units <= 1:  # 분할되지 않은 경우 문자 단위로 fallback
