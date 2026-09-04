@@ -1,7 +1,8 @@
 # original: https://github.com/snakers4/silero-vad/blob/master/utils_vad.py
 
 import os
-import subprocess
+import shutil
+import urllib.request
 import torch
 import numpy as np
 import onnxruntime
@@ -15,6 +16,11 @@ class VoiceActivityDetection():
 
     def __init__(self, force_onnx_cpu=True):
         path = os.path.join(os.getcwd(), 'model', 'vad', 'silero_vad.onnx')
+        if not os.path.exists(path):
+            raise FileNotFoundError(
+                f"Silero VAD model not found at {path}. "
+                "Run VoiceActivityDetection.download() to fetch it."
+            )
 
 
         opts = onnxruntime.SessionOptions()
@@ -99,8 +105,11 @@ class VoiceActivityDetection():
         return stacked.cpu()
 
     @staticmethod
-    def download(model_url="https://github.com/snakers4/silero-vad/blob/master/files/silero_vad.onnx"):
-        target_dir = os.path.expanduser("~/.cache/whisper-live/")
+    def download(model_url="https://raw.githubusercontent.com/snakers4/silero-vad/v4.0/files/silero_vad.onnx",
+                 target_dir=None):
+        # Default to the directory __init__ actually loads the model from
+        if target_dir is None:
+            target_dir = os.path.join(os.getcwd(), 'model', 'vad')
 
         # Ensure the target directory exists
         os.makedirs(target_dir, exist_ok=True)
@@ -109,13 +118,25 @@ class VoiceActivityDetection():
         model_filename = os.path.join(target_dir, "silero_vad.onnx")
 
         # Check if the model file already exists
-        if not os.path.exists(model_filename):
-            # If it doesn't exist, download the model using wget
-            try:
-                print("Start to download the model using wget.")
-                subprocess.run(["wget", "-O", model_filename, model_url], check=True)
-            except subprocess.CalledProcessError:
-                print("Failed to download the model using wget.")
+        if os.path.exists(model_filename):
+            return model_filename
+
+        # Download to a temporary name so an interrupted transfer is not
+        # mistaken for a complete model on the next run
+        part_filename = model_filename + ".part"
+        logger.debug(f'[vad.py] download - start : {model_url}')
+        try:
+            with urllib.request.urlopen(model_url, timeout=60) as response:
+                with open(part_filename, 'wb') as f:
+                    shutil.copyfileobj(response, f)
+            os.replace(part_filename, model_filename)
+        except Exception as e:
+            if os.path.exists(part_filename):
+                os.remove(part_filename)
+            logger.error(f'[vad.py] download - An error occurred: {e}')
+            raise RuntimeError(f"Failed to download the Silero VAD model from {model_url}: {e}") from e
+
+        logger.debug(f'[vad.py] download - complete : {model_filename}')
         return model_filename
 
 
