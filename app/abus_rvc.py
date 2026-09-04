@@ -117,6 +117,12 @@ class RVC:
         
         ffmpeg_to_stereo(output_voice_file, output_path)
         
+        if not os.path.exists(output_path):
+            raise RuntimeError(
+                f"ffmpeg did not produce {output_path}. "
+                f"Keeping the converted voice at {output_voice_file}."
+            )
+        
         try:
             os.remove(output_voice_file)
         except Exception as e:
@@ -167,6 +173,12 @@ class RVC:
                 )        
 
         ffmpeg_to_stereo(output_voice_file, output_path)
+        
+        if not os.path.exists(output_path):
+            raise RuntimeError(
+                f"ffmpeg did not produce {output_path}. "
+                f"Keeping the converted voice at {output_voice_file}."
+            )
         
         try:
             os.remove(output_voice_file)
