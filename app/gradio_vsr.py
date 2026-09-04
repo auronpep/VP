@@ -41,7 +41,7 @@ class GradioVSR:
         try:
             logger.debug(f'upload_source: file_obj={file_obj}, youtube_url={youtube_url}')
             self.fm = FileManager()
-            if self._upload(file_obj, youtube_url, video_quality, audio_format) == False:
+            if not self._upload(file_obj, youtube_url, video_quality, audio_format):
                 return None, None
 
             return self.fm.get_split("Source.video"), self.fm.get_all_files()
