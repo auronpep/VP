@@ -271,6 +271,8 @@ def fix_loader_name(name):
     elif name in ['hqq']:
         return 'HQQ'
 
+    return name
+
 
 def add_extension(name, last=False):
     if args.extensions is None:
