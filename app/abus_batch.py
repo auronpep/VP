@@ -21,7 +21,7 @@ class BatchManager:
         
         
     def get_all_fm(self) -> list:
-        return self.file_managers.values()
+        return list(self.file_managers.values())
     
     def get_all_files(self) -> list:
         files = []
