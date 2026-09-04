@@ -58,7 +58,7 @@ def get_srt_wordlevel(segments):
 
 
 def get_vtt(segments):
-    output = "WebVTT\n\n"
+    output = "WEBVTT\n\n"
     for i, segment in enumerate(segments):
         output += f"{i + 1}\n"
         output += f"{timeformat_vtt(segment['start'])} --> {timeformat_vtt(segment['end'])}\n"
@@ -150,7 +150,7 @@ def get_serialized_srt(dicts):
 
 
 def get_serialized_vtt(dicts):
-    output = "WebVTT\n\n"
+    output = "WEBVTT\n\n"
     for dic in dicts:
         output += f'{dic["index"]}\n'
         output += f'{dic["timestamp"]}\n'
