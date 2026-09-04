@@ -1,3 +1,5 @@
+import os
+
 from pydub import AudioSegment
 from pydub.silence import detect_leading_silence
 
@@ -95,4 +97,5 @@ class AbusAudio():
         :param padding_duration: 패딩 길이
         """
         audio = AbusAudio.trim_silence_audio(input_file, start_silence_threshold, end_silence_threshold, chunk_size, padding_duration)
-        audio.export(output_file)
+        export_format = os.path.splitext(output_file)[1].lstrip('.').lower() or 'mp3'
+        audio.export(output_file, format=export_format)
