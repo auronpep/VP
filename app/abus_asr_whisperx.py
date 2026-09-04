@@ -13,7 +13,6 @@ import whisperx
 from whisperx.utils import get_writer
 import gc 
 import ctranslate2
-import whisper
 import torch
 import gradio as gr
 
