@@ -126,7 +126,7 @@ class MSVoiceManager():
     def _load_tts_samples(self, tts_samples_csv):
         self.speakers = []
         try:
-            with open(tts_samples_csv, 'r', encoding='utf-8') as file:  # UTF-8 인코딩 명시
+            with open(tts_samples_csv, 'r', encoding='utf-8', newline='') as file:  # UTF-8 인코딩 명시
                 reader = csv.DictReader(file) # DictReader를 사용하여 헤더를 키로 접근
                 for row in reader:
                     speaker = Speaker(
