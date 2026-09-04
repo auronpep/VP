@@ -187,12 +187,21 @@ class AbusSpacy:
                     sent_end = sent_start + sent_duration
                     break
             
-            sent_end = min(sent_end, event_ends[-1])
+            group_end = event_ends[-1]
+            sent_end = min(sent_end, group_end)
             if sent_end - sent_start < cls.MIN_DURATION_MS:
-                sent_end = sent_start + cls.MIN_DURATION_MS
-                if sent_end > event_ends[-1]:
-                    sent_start = event_ends[-1] - cls.MIN_DURATION_MS
-                    sent_end = event_ends[-1]
+                sent_end = min(sent_start + cls.MIN_DURATION_MS, group_end)
+
+            if sent_end <= sent_start:
+                # The group has no time left. Emitting here would produce a
+                # zero-length or backwards cue, and pulling the start back to
+                # fit MIN_DURATION_MS can go negative, so fold the text into
+                # the previous cue rather than emit an invalid one.
+                if result:
+                    result[-1].text = f"{result[-1].text} {sent}"
+                    continue
+                sent_start = event_starts[0]
+                sent_end = max(group_end, sent_start + cls.MIN_DURATION_MS)
             
             result.append(pysubs2.SSAEvent(start=sent_start, end=sent_end, text=sent))
             last_end = sent_end
