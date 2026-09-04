@@ -263,6 +263,12 @@ class OneClick():
             "C": "CPU"
         }
 
+        if choice not in gpu_choice_to_name:
+            print(f"Error: invalid GPU choice {choice!r}.")
+            print(f"Expected one of: {', '.join(sorted(gpu_choice_to_name))} "
+                  f"({', '.join(f'{k}={v}' for k, v in sorted(gpu_choice_to_name.items()))}).")
+            sys.exit(1)
+
         selected_gpu = gpu_choice_to_name[choice]
         
         # pip 버전이 24.1 이상인 경우, 
