@@ -197,7 +197,7 @@ class F5TTS:
             tts_segment_file = os.path.join(segments_folder, f'tts_{i+1}.{audio_format}')
             tts_result = self.request_tts(line.text, tts_segment_file, ref_audio, ref_text, speed_factor, audio_format)
 
-            if tts_result == False:
+            if not tts_result:
                 if next_line:
                     silence = AudioSegment.silent(duration=next_line.start-line.start)
                     combined_audio += silence
@@ -228,7 +228,7 @@ class F5TTS:
         for i in progress.tqdm(range(len(lines)), desc='Generating...'):
             tts_segment_file = os.path.join(segments_folder, f'tts_{i+1:06}.{audio_format}')    
             tts_result = self.request_tts(lines[i], tts_segment_file, ref_audio, ref_text, speed_factor, audio_format)
-            if tts_result == False:
+            if not tts_result:
                 continue
             combined_audio += AudioSegment.from_file(tts_segment_file)
             
@@ -276,7 +276,7 @@ class F5TTS:
                 else:
                     tts_result = self.request_tts(conversation['message'], tts_segment_file, ref_audio2, ref_text2, speed_factor, audio_format)
                 
-                if tts_result == False:
+                if not tts_result:
                     continue
                 combined_audio += AudioSegment.from_file(tts_segment_file)
         
