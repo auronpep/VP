@@ -16,29 +16,60 @@ def ffmpeg_replace_audio(input_path: str, audio_path: str, output_path: str, pro
     _, file_extension = os.path.splitext(os.path.basename(input_path))
     
     if file_extension == ".mp4":
-        command = f'ffmpeg -y -i "{input_path}" -i "{audio_path}" -c:v copy -map 0:v:0 -map 1:a:0 -c:a aac -shortest "{output_path}" -nostdin'
+        command = [
+            'ffmpeg', '-y',
+            '-i', input_path,
+            '-i', audio_path,
+            '-c:v', 'copy',
+            '-map', '0:v:0',
+            '-map', '1:a:0',
+            '-c:a', 'aac',
+            '-shortest', output_path,
+            '-nostdin'
+        ]
     elif file_extension == ".webm":
-        command = f'ffmpeg -y -i "{input_path}" -i "{audio_path}" -c:v copy -map 0:v:0 -map 1:a:0 -c:a libopus -shortest "{output_path}" -nostdin'
+        command = [
+            'ffmpeg', '-y',
+            '-i', input_path,
+            '-i', audio_path,
+            '-c:v', 'copy',
+            '-map', '0:v:0',
+            '-map', '1:a:0',
+            '-c:a', 'libopus',
+            '-shortest', output_path,
+            '-nostdin'
+        ]
     else:
-        command = f'ffmpeg -y -i "{input_path}" -i "{audio_path}" -c:v copy -map 0:v:0 -map 1:a:0 -c:a aac -shortest "{output_path}" -nostdin'        
+        command = [
+            'ffmpeg', '-y',
+            '-i', input_path,
+            '-i', audio_path,
+            '-c:v', 'copy',
+            '-map', '0:v:0',
+            '-map', '1:a:0',
+            '-c:a', 'aac',
+            '-shortest', output_path,
+            '-nostdin'
+        ]
         
     logger.debug(f'[abus:ffmpeg_replace_audio] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
     return output_path
 
 
 def ffmpeg_extract_audio(input_path: str, output_path: str, audio_format: str = "wav"):  
-    encoding_options = "-acodec pcm_s16le -ar 48000 -b:a 320k -ac 2"
-    if audio_format=="flac":
-        encoding_options = "-acodec flac -ar 48000 -compression_level 0 -ac 2"
-    elif audio_format=="mp3":
-        encoding_options = "-f mp3 -qscale:a 0 -ar 48000 -ac 2"    # -ar 48000 -ab 320k
-    elif audio_format=="ogg":
-        encoding_options = "-acodec libvorbis -ar 48000 -b:a 320k -ac 2"
-      
-    command = f'ffmpeg -y -i "{input_path}" -vn {encoding_options} "{output_path}" -nostdin'    
+    if audio_format == "flac":
+        encoding_args = ['-acodec', 'flac', '-ar', '48000', '-compression_level', '0', '-ac', '2']
+    elif audio_format == "mp3":
+        encoding_args = ['-f', 'mp3', '-qscale:a', '0', '-ar', '48000', '-ac', '2']
+    elif audio_format == "ogg":
+        encoding_args = ['-acodec', 'libvorbis', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+    else:
+        encoding_args = ['-acodec', 'pcm_s16le', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+
+    command = ['ffmpeg', '-y', '-i', input_path, '-vn'] + encoding_args + [output_path, '-nostdin']
     logger.debug(f'[abus:ffmpeg_extract_audio] {command}')
-    os.system(command)  
+    subprocess.run(command, check=False)
     return output_path    
 
 
@@ -174,49 +205,65 @@ def ffmpeg_mix_audio(audio_path1: str, audio_path2: str, output_path: str, audio
     
     filter_complex = f'[0:a]volume={volume1}[a0];[1:a]volume={volume2}[a1];[a0][a1]amix=inputs=2:duration=longest'
     
-    encoding_options = "-c:a pcm_s16le -ar 48000 -b:a 320k -ac 2"
-    if audio_format=="flac":
-        encoding_options = "-c:a flac -ar 48000 -compression_level 0 -ac 2"
-    elif audio_format=="mp3":
-        encoding_options = "-c:a libmp3lame -qscale:a 0 -ar 48000 -ac 2"      # -ar 48000 -ab 320k
-    elif audio_format=="ogg":
-        encoding_options = "-c:a libvorbis -ar 48000 -b:a 320k -ac 2"    
-    
-    command = f'ffmpeg -y -i "{audio_path1}" -i "{audio_path2}" -filter_complex "{filter_complex}" {encoding_options} "{output_path}" -nostdin'
+    if audio_format == "flac":
+        encoding_args = ['-c:a', 'flac', '-ar', '48000', '-compression_level', '0', '-ac', '2']
+    elif audio_format == "mp3":
+        encoding_args = ['-c:a', 'libmp3lame', '-qscale:a', '0', '-ar', '48000', '-ac', '2']
+    elif audio_format == "ogg":
+        encoding_args = ['-c:a', 'libvorbis', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+    else:
+        encoding_args = ['-c:a', 'pcm_s16le', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+
+    command = [
+        'ffmpeg', '-y',
+        '-i', audio_path1,
+        '-i', audio_path2,
+        '-filter_complex', filter_complex
+    ] + encoding_args + [output_path, '-nostdin']
     logger.debug(f'[abus:ffmpeg_mix_audio] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
 
 
 
 def ffmpeg_convert_audio(input_path: str, output_path: str, audio_format: str):
-    encoding_options = "-c:a pcm_s16le -ar 48000 -b:a 320k -ac 2"
-    if audio_format=="flac":
-        encoding_options = "-c:a flac -ar 48000 -compression_level 0 -ac 2"
-    elif audio_format=="mp3":
-        encoding_options = "-c:a libmp3lame -qscale:a 0 -ar 48000 -ac 2"      # -ar 48000 -ab 320k
-    elif audio_format=="ogg":
-        encoding_options = "-c:a libvorbis -ar 48000 -b:a 320k -ac 2"
-        
-    command = f'ffmpeg -y -i "{input_path}" {encoding_options} "{output_path}" -nostdin'             
+    if audio_format == "flac":
+        encoding_args = ['-c:a', 'flac', '-ar', '48000', '-compression_level', '0', '-ac', '2']
+    elif audio_format == "mp3":
+        encoding_args = ['-c:a', 'libmp3lame', '-qscale:a', '0', '-ar', '48000', '-ac', '2']
+    elif audio_format == "ogg":
+        encoding_args = ['-c:a', 'libvorbis', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+    else:
+        encoding_args = ['-c:a', 'pcm_s16le', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+
+    command = ['ffmpeg', '-y', '-i', input_path] + encoding_args + [output_path, '-nostdin']
     logger.debug(f'[abus:ffmpeg_convert_audio] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
 
 
 
 def ffmpeg_to_mono(input_path: str, left_path: str, right_path: str, audio_format: str = "wav"):
     filter_complex = "[0:a]channelsplit=channel_layout=stereo[left][right]"
     
-    encoding_options = "-c:a pcm_s16le -ar 48000 -b:a 320k"
-    if audio_format=="flac":
-        encoding_options = "-c:a flac -ar 48000 -compression_level 0"
-    elif audio_format=="mp3":
-        encoding_options = "-c:a libmp3lame -qscale:a 0 -ar 48000"    # -ar 48000 -ab 320k
-    elif audio_format=="ogg":
-        encoding_options = "-c:a libvorbis -ar 48000 -b:a 320k"    
+    if audio_format == "flac":
+        encoding_args = ['-c:a', 'flac', '-ar', '48000', '-compression_level', '0']
+    elif audio_format == "mp3":
+        encoding_args = ['-c:a', 'libmp3lame', '-qscale:a', '0', '-ar', '48000']
+    elif audio_format == "ogg":
+        encoding_args = ['-c:a', 'libvorbis', '-ar', '48000', '-b:a', '320k']
+    else:
+        encoding_args = ['-c:a', 'pcm_s16le', '-ar', '48000', '-b:a', '320k']
 
-    command = f'ffmpeg -y -i "{input_path}" -filter_complex "{filter_complex}" -map "[left]" {encoding_options} "{left_path}" -map "[right]" {encoding_options} "{right_path}"'
+    command = [
+        'ffmpeg', '-y',
+        '-i', input_path,
+        '-filter_complex', filter_complex,
+        '-map', '[left]'
+    ] + encoding_args + [
+        left_path,
+        '-map', '[right]'
+    ] + encoding_args + [right_path]
     logger.debug(f'[abus:ffmpeg_to_mono] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
 
 
 
@@ -228,17 +275,24 @@ def ffmpeg_to_stereo(left_path, right_path, stereo_path):
     filter_complex = "[0:a][1:a]join=inputs=2:channel_layout=stereo[a]"
     # filter_complex = "[0:a][1:a]amerge=inputs=2[a]"
     
-    encoding_options = "-c:a pcm_s16le -ar 48000 -b:a 320k -ac 2"
-    if ext==".flac":
-        encoding_options = "-c:a flac -ar 48000 -compression_level 0 -ac 2"
-    elif ext==".mp3":
-        encoding_options = "-c:a libmp3lame -qscale:a 0 -ar 48000 -ac 2"    # -ar 48000 -ab 320k
-    elif ext==".ogg":
-        encoding_options = "-c:a libvorbis -ar 48000 -b:a 320k -ac 2"        
-    
-    command = f'ffmpeg -y -i "{left_path}" -i "{right_path}" -filter_complex "{filter_complex}" -map "[a]" {encoding_options} "{stereo_path}"'
+    if ext == ".flac":
+        encoding_args = ['-c:a', 'flac', '-ar', '48000', '-compression_level', '0', '-ac', '2']
+    elif ext == ".mp3":
+        encoding_args = ['-c:a', 'libmp3lame', '-qscale:a', '0', '-ar', '48000', '-ac', '2']
+    elif ext == ".ogg":
+        encoding_args = ['-c:a', 'libvorbis', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+    else:
+        encoding_args = ['-c:a', 'pcm_s16le', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+
+    command = [
+        'ffmpeg', '-y',
+        '-i', left_path,
+        '-i', right_path,
+        '-filter_complex', filter_complex,
+        '-map', '[a]'
+    ] + encoding_args + [stereo_path]
     logger.debug(f'[abus:ffmpeg_to_stereo] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
     return True
 
 
@@ -246,33 +300,45 @@ def ffmpeg_to_stereo(mono_path, stereo_path):
     file_name, file_extension = os.path.splitext(os.path.basename(stereo_path))
     ext = file_extension.lower()    
     
-    encoding_options = "-c:a pcm_s16le -ar 48000 -b:a 320k -ac 2"
-    if ext==".flac":
-        encoding_options = "-c:a flac -ar 48000 -compression_level 0 -ac 2"
-    elif ext==".mp3":
-        encoding_options = "-c:a libmp3lame -qscale:a 0 -ar 48000 -ac 2"    # -ar 48000 -ab 320k
-    elif ext==".ogg":
-        encoding_options = "-c:a libvorbis -ar 48000 -b:a 320k -ac 2"        
-    
-    command = f'ffmpeg -y -i "{mono_path}" {encoding_options} "{stereo_path}"'
+    if ext == ".flac":
+        encoding_args = ['-c:a', 'flac', '-ar', '48000', '-compression_level', '0', '-ac', '2']
+    elif ext == ".mp3":
+        encoding_args = ['-c:a', 'libmp3lame', '-qscale:a', '0', '-ar', '48000', '-ac', '2']
+    elif ext == ".ogg":
+        encoding_args = ['-c:a', 'libvorbis', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+    else:
+        encoding_args = ['-c:a', 'pcm_s16le', '-ar', '48000', '-b:a', '320k', '-ac', '2']
+
+    command = ['ffmpeg', '-y', '-i', mono_path] + encoding_args + [stereo_path]
     logger.debug(f'[abus:ffmpeg_to_stereo] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
     return True
 
 # audio_gain: decibel 
 def ffmpeg_volume_control(input_path: str, output_path: str, audio_gain: float):
     volume = f"{audio_gain}dB"
-    encoding_options = f'-filter:a "volume={volume}"'
-        
-    command = f'ffmpeg -y -i "{input_path}" {encoding_options} "{output_path}" -nostdin'             
+    command = [
+        'ffmpeg', '-y',
+        '-i', input_path,
+        '-filter:a', f'volume={volume}',
+        output_path,
+        '-nostdin'
+    ]
     logger.debug(f'[abus:ffmpeg_volume_control] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
     
     
 def ffmpeg_trim_seconds(input_path: str, output_path: str, seconds: float):
-    command = f'ffmpeg -y -ss 00:00:00 -i "{input_path}" -t {seconds} -c copy "{output_path}"'
+    command = [
+        'ffmpeg', '-y',
+        '-ss', '00:00:00',
+        '-i', input_path,
+        '-t', str(seconds),
+        '-c', 'copy',
+        output_path
+    ]
     logger.debug(f'[abus:ffmpeg_trim_seconds] {command}')
-    os.system(command)
+    subprocess.run(command, check=False)
     return True
 
 

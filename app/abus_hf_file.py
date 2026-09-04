@@ -32,7 +32,7 @@ class HF_File():
         file_path = os.path.join(path_model_folder(), self.file_type, self.subfolder, self.file_name)
         if os.path.exists(file_path):
             if os.path.getsize(file_path) == self.file_size:
-                # logger.debug(f'[abus_hf_file.py] has_local_file - True : {file_path}')    
+                # logger.debug(f'[abus_hf_file.py] has_local_file - True : {file_path}')
                 return True
         logger.debug(f'[abus_hf_file.py] has_local_file - False : {file_path}')        
         return False
@@ -64,6 +64,7 @@ class HF_File():
             return False, None  
         
     def unzip(self, make_folder: bool = False):
+        import os as _os
         zip_path = os.path.join(path_model_folder(), self.file_type, self.subfolder, self.file_name)
         extract_to = os.path.dirname(zip_path)
         logger.debug(f'[abus_hf_file.py] unzip: {zip_path}')        
@@ -76,6 +77,10 @@ class HF_File():
                     os.makedirs(extract_to)
                 
                 if '/' in zip_contents[0]:
+                    for member in zip_ref.namelist():
+                        member_path = _os.path.realpath(_os.path.join(extract_to, member))
+                        if not member_path.startswith(_os.path.realpath(extract_to) + _os.sep):
+                            raise ValueError(f"Zip path traversal attempt detected: {member}")
                     zip_ref.extractall(extract_to)
                 else:
                     if make_folder:
@@ -83,6 +88,10 @@ class HF_File():
                         extract_to = os.path.join(extract_to, folder_name)
                         if not os.path.exists(extract_to):
                             os.makedirs(extract_to)
+                    for member in zip_ref.namelist():
+                        member_path = _os.path.realpath(_os.path.join(extract_to, member))
+                        if not member_path.startswith(_os.path.realpath(extract_to) + _os.sep):
+                            raise ValueError(f"Zip path traversal attempt detected: {member}")
                     zip_ref.extractall(extract_to)
             return True
         except:
@@ -108,4 +117,3 @@ class HF_File():
             return True, download_file_path
         except:
             return False, None          
-    

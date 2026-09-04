@@ -326,7 +326,7 @@ class VoiceConverter:
 
     def load_model(self, weight_root):
         self.cpt = (
-            torch.load(weight_root, map_location="cpu")
+            torch.load(weight_root, map_location="cpu", weights_only=True)
             if os.path.isfile(weight_root)
             else None
         )
