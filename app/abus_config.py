@@ -80,9 +80,10 @@ def get_azure_translator_region() -> str:
 
 def azure_translator_available() -> bool:
     """Check if Azure Translator is available via environment variables."""
-    return (
-        get_env('AZURE_TRANSLATOR_KEY') is not None and
-        get_env('AZURE_TRANSLATOR_ENDPOINT') is not None
+    return bool(
+        get_env('AZURE_TRANSLATOR_KEY') and
+        get_env('AZURE_TRANSLATOR_ENDPOINT') and
+        get_env('AZURE_TRANSLATOR_REGION')
     )
 
 
