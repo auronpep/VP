@@ -106,6 +106,6 @@ class CelebVoiceManager():
         return None
     
     def languages(self):
-        languages = self.celebrities.keys()
+        languages = list(self.celebrities.keys())
         # emoji_languages = ["chinese", "english", "korean", "japanese"]
         return languages
