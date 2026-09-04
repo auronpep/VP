@@ -64,7 +64,7 @@ def run_mdx(model_params, output_dir, model_path, filename, exclude_main=False, 
         diff_stem_name = stem_naming.get(stem_name) if invert_suffix is None else invert_suffix
         stem_name = f"{stem_name}_diff" if diff_stem_name is None else diff_stem_name
         invert_filepath = os.path.join(output_dir, f"{os.path.basename(os.path.splitext(filename)[0])}_{stem_name}.wav")
-        sf.write(invert_filepath, (-wave_processed.T * model.compensation) + wave.T, sr)
+        sf.write(invert_filepath, (-wave_processed.T * model.compensation) + (wave.T * peak), sr)
 
     if not keep_orig:
         os.remove(filename)
