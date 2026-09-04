@@ -60,6 +60,11 @@ class RVC:
         voice_folder = os.path.join(os.getcwd(), 'model', 'rvc-voice', rvc_voice)
         voice_pth_path = path_subfile(voice_folder, ".pth")
         voice_index_path = path_subfile(voice_folder, ".index")      
+        if not voice_pth_path:
+            raise FileNotFoundError(
+                f"No .pth model found for RVC voice '{rvc_voice}' in {voice_folder}. "
+                "Download an RVC voice into model/rvc-voice/ before converting."
+            )
         return voice_pth_path, voice_index_path    
 
     def simple_inference(self, input_path, output_path, rvc_voice, export_format = "wav"):
