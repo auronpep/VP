@@ -44,6 +44,10 @@ def run_mdx(model_params, output_dir, model_path, filename, exclude_main=False, 
     wave, sr = librosa.load(filename, mono=False, sr=DEFAULT_SR)
     # normalizing input wave gives better output
     peak = max(np.max(wave), abs(np.min(wave)))
+    if peak == 0:
+        # A digitally silent input would otherwise be divided by zero, filling
+        # the array with NaN and writing NaN-filled stems without raising.
+        peak = 1.0
     wave /= peak
     if denoise:
         wave_processed = -(mdx_sess.process_wave(-wave, m_threads)) + (mdx_sess.process_wave(wave, m_threads))
