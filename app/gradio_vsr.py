@@ -69,7 +69,7 @@ class GradioVSR:
             return False
         else:
             self.fm.set_split("Source.video", self.source_file)
-            if self.has_audio == True:
+            if self.has_audio:
                 input_audio_file = path_change_ext(self.source_file, f'.{audio_format}')
                 ffmpeg_extract_audio(self.source_file, input_audio_file, audio_format)    
                 self.fm.set_split("Source.audio", input_audio_file)
@@ -103,7 +103,7 @@ class GradioVSR:
                 output_var_file = path_add_postfix(working_file, "_var")
                 
                 success = self.video_artifact_reduction(working_file, output_var_file, var_mode)
-                if success == False:
+                if not success:
                     logger.error(f"[gradio_vsr.py] video_artifact_reduction - failed")
                     return None, None
                 else:
@@ -114,7 +114,7 @@ class GradioVSR:
                 vsr_scale = float(vsr_scale)
                 
                 success = self.video_super_res(working_file, output_vsr_file, vsr_mode, vsr_scale)
-                if success == False:
+                if not success:
                     logger.error(f"[gradio_vsr.py] video_super_res - failed")
                     return None, None
                 else:
@@ -123,7 +123,7 @@ class GradioVSR:
             if compression_enable:
                 output_compress_file = path_add_postfix(working_file, "_compress")    
                 success = self.video_compress(working_file, output_compress_file, None, int(compression_crf), compression_preset)
-                if success == False:
+                if not success:
                     logger.error(f"[gradio_vsr.py] video_compress - failed")
                     return None, None
                 else:
@@ -133,7 +133,7 @@ class GradioVSR:
             # ffmpeg_change_fps(output_vsr_file, output_path, fps_a)
             
             output_path = path_add_postfix(self.source_file, "_rtx")
-            if self.has_audio == True:
+            if self.has_audio:
                 input_audio_file = self.fm.get_split("Source.audio")
                 ffmpeg_replace_audio(working_file, input_audio_file, output_path)
             else:
@@ -179,7 +179,7 @@ class GradioVSR:
             progress_callback_lambda = lambda output: update_progress(output, progress)
             return_code = vsr_artifact_reduction(self.maxine_sdk_path, input_path, output_path, var_mode, progress_callback_lambda)
             
-            if return_code == True:
+            if return_code:
                 return True
             else:
                 logger.error(f'[gradio_vsr.py] video_artifact_reduction - return_code = {return_code}')
@@ -243,7 +243,7 @@ class GradioVSR:
             progress_callback_lambda = lambda output: update_progress(output, progress)            
             return_code = vsr_super_res(self.maxine_sdk_path, input_path, output_path, vsr_mode, vsr_resolution, progress_callback_lambda)
             
-            if return_code == True:
+            if return_code:
                 return True
             else:
                 logger.error(f'[gradio_vsr.py] video_super_res - return_code = {return_code}')
@@ -289,7 +289,7 @@ class GradioVSR:
             progress = gr.Progress()            
             progress_callback_lambda = lambda output: update_progress(output, progress)
             return_code = vsr_compress_video(input_path, output_path, target_size_mb, crf, preset, progress_callback_lambda)
-            if return_code == True:
+            if return_code:
                 return True
             else:
                 logger.error(f'[gradio_vsr.py] video_super_res - return_code = {return_code}')
