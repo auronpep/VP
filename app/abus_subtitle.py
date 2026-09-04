@@ -41,18 +41,50 @@ def get_srt(segments):
     return output
 
 
+def highlight_word(text, striped, cursor):
+    """Underline the next occurrence of `striped` at or after `cursor`.
+
+    Words arrive in the order they were spoken, so a cursor that only ever
+    moves forward highlights the repetition the caller actually means
+    instead of always hitting the first match like str.replace does.
+    Returns the marked-up line and the position to resume searching from.
+    """
+    if not striped:
+        return text, cursor
+
+    # Guard only the edges that can collide with a neighbouring letter;
+    # scripts written without spaces (CJK) never match a hard \b.
+    head = r'(?<!\w)' if striped[0].isalnum() else ''
+    tail = r'(?!\w)' if striped[-1].isalnum() else ''
+    pattern = re.compile(head + re.escape(striped) + tail)
+
+    match = pattern.search(text, cursor) or pattern.search(text)
+    if match is None:
+        index = text.find(striped, cursor)
+        if index == -1:
+            index = text.find(striped)
+        if index == -1:
+            return text, cursor
+        start, end = index, index + len(striped)
+    else:
+        start, end = match.span()
+
+    highlighted = f'<font color=\"#0e556a\"><b><u>{striped}</u></b></font>'
+    return text[:start] + highlighted + text[end:], end
+
+
 def get_srt_wordlevel(segments):
     output = ""
     i = 0
     for segment in segments:
+        cursor = 0
         for word in segment['words']:
             i += 1
             output += f"{i}\n"
             output += f"{timeformat_srt(word.start)} --> {timeformat_srt(word.end)}\n"
             
             striped = word.word.strip()
-            highlighted = f'<font color=\"#0e556a\"><b><u>{striped}</u></b></font>'
-            line = segment['text'].replace(striped, highlighted)
+            line, cursor = highlight_word(segment['text'], striped, cursor)
 
             output += f"{line}\n\n"    
     return output
