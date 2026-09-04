@@ -76,8 +76,11 @@ def run_mdx(model_params, output_dir, model_path, filename, exclude_main=False, 
         invert_filepath = os.path.join(output_dir, f"{os.path.basename(os.path.splitext(filename)[0])}_{stem_name}.wav")
         sf.write(invert_filepath, (-wave_processed.T * model.compensation) + (wave.T * peak), sr)
 
-    if not keep_orig:
-        os.remove(filename)
+    if not keep_orig and os.path.exists(filename):
+        try:
+            os.remove(filename)
+        except OSError as e:
+            logger.warning(f'[abus_mdx] could not remove {filename}: {e}')
 
     del mdx_sess, wave_processed, wave
     gc.collect()
