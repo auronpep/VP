@@ -291,7 +291,8 @@ def load_user_config():
     Loads custom model-specific settings
     '''
     if Path(f'{args.model_dir}/config-user.yaml').exists():
-        file_content = open(f'{args.model_dir}/config-user.yaml', 'r').read().strip()
+        with open(f'{args.model_dir}/config-user.yaml', 'r', encoding='utf-8') as f:
+            file_content = f.read().strip()
 
         if file_content:
             user_config = yaml.safe_load(file_content)
@@ -316,7 +317,8 @@ if args.api or args.public_api:
 # Load model-specific settings
 with Path(f'{args.model_dir}/config.yaml') as p:
     if p.exists():
-        model_config = yaml.safe_load(open(p, 'r').read())
+        with open(p, 'r', encoding='utf-8') as f:
+            model_config = yaml.safe_load(f.read())
     else:
         model_config = {}
 
