@@ -47,43 +47,39 @@ def run_mdx(model_params, output_dir, model_path, filename, exclude_main=False, 
     )
 
     mdx_sess = MDX(model_path, model)
-    wave, sr = librosa.load(filename, mono=False, sr=DEFAULT_SR)
-    # normalizing input wave gives better output
-    peak = max(np.max(wave), abs(np.min(wave)))
-    if peak == 0:
-        # A digitally silent input would otherwise be divided by zero, filling
-        # the array with NaN and writing NaN-filled stems without raising.
-        peak = 1.0
-    wave /= peak
-    if denoise:
-        wave_processed = -(mdx_sess.process_wave(-wave, m_threads)) + (mdx_sess.process_wave(wave, m_threads))
-        wave_processed *= 0.5
-    else:
-        wave_processed = mdx_sess.process_wave(wave, m_threads)
-    # return to previous peak
-    wave_processed *= peak
-    stem_name = model.stem_name if suffix is None else suffix
+    try:
+        wave, sr = librosa.load(filename, mono=False, sr=DEFAULT_SR)
+        # normalizing input wave gives better output
+        peak = max(np.max(wave), abs(np.min(wave)))
+        wave /= peak
+        if denoise:
+            wave_processed = -(mdx_sess.process_wave(-wave, m_threads)) + (mdx_sess.process_wave(wave, m_threads))
+            wave_processed *= 0.5
+        else:
+            wave_processed = mdx_sess.process_wave(wave, m_threads)
+        # return to previous peak
+        wave_processed *= peak
+        stem_name = model.stem_name if suffix is None else suffix
 
-    main_filepath = None
-    if not exclude_main:
-        main_filepath = os.path.join(output_dir, f"{os.path.basename(os.path.splitext(filename)[0])}_{stem_name}.wav")
-        sf.write(main_filepath, wave_processed.T, sr)
+        main_filepath = None
+        if not exclude_main:
+            main_filepath = os.path.join(output_dir, f"{os.path.basename(os.path.splitext(filename)[0])}_{stem_name}.wav")
+            sf.write(main_filepath, wave_processed.T, sr)
 
-    invert_filepath = None
-    if not exclude_inversion:
-        diff_stem_name = stem_naming.get(stem_name) if invert_suffix is None else invert_suffix
-        stem_name = f"{stem_name}_diff" if diff_stem_name is None else diff_stem_name
-        invert_filepath = os.path.join(output_dir, f"{os.path.basename(os.path.splitext(filename)[0])}_{stem_name}.wav")
-        sf.write(invert_filepath, (-wave_processed.T * model.compensation) + (wave.T * peak), sr)
+        invert_filepath = None
+        if not exclude_inversion:
+            diff_stem_name = stem_naming.get(stem_name) if invert_suffix is None else invert_suffix
+            stem_name = f"{stem_name}_diff" if diff_stem_name is None else diff_stem_name
+            invert_filepath = os.path.join(output_dir, f"{os.path.basename(os.path.splitext(filename)[0])}_{stem_name}.wav")
+            sf.write(invert_filepath, (-wave_processed.T * model.compensation) + wave.T, sr)
 
-    if not keep_orig and os.path.exists(filename):
-        try:
+        if not keep_orig:
             os.remove(filename)
-        except OSError as e:
-            logger.warning(f'[abus_mdx] could not remove {filename}: {e}')
-
-    del mdx_sess, wave_processed, wave
-    gc.collect()
-    return main_filepath, invert_filepath
+        return main_filepath, invert_filepath
+    finally:
+        # Release the ONNX Runtime session (and its CUDA arena) even when
+        # separation or file writing raised part-way through.
+        del mdx_sess
+        gc.collect()
 
 
