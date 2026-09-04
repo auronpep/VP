@@ -101,8 +101,8 @@ class AzureTTS:
         
         logger.debug(f'[abus_tts_azure.py] request_tts - line = {line}')
         
-        if False == self.generate_audio(line, voice_name, output_voice_file, rate=speed_factor, volume=volume_factor, pitch=semitones):
-            logger.warning("[abus_tts_azure.py] request_tts - error: API returns False")
+        if not self.generate_audio(line, voice_name, output_voice_file, rate=speed_factor, volume=volume_factor, pitch=semitones):
+            logger.warning(f"[abus_tts_azure.py] request_tts - error: API returns False")
             return False
                 
         trimed_voice_file = path_add_postfix(output_voice_file, "_trimed")
