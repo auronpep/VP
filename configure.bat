@@ -62,7 +62,7 @@ where choco >nul 2>&1
 if %errorlevel% neq 0 (
     echo Installing Chocolatey...
     %CHOCPATH% -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))"
-    if %errorlevel% neq 0 (
+    if !errorlevel! neq 0 (
         echo ERROR: Failed to install Chocolatey.
         pause
         exit /b 1
@@ -73,7 +73,7 @@ if %errorlevel% neq 0 (
     )
     :: Verify choco is now available
     where choco >nul 2>&1
-    if %errorlevel% neq 0 (
+    if !errorlevel! neq 0 (
         echo WARNING: Chocolatey installed but choco command not found in PATH.
         echo You may need to restart the command prompt.
     )
@@ -122,7 +122,7 @@ if !IS_NVIDIA_GPU! equ 1 (
     echo.
     @REM choco install -y cuda --version=11.8.0.52206
     choco install -y cuda --version=12.3.2.546
-    if %errorlevel% neq 0 (
+    if !errorlevel! neq 0 (
         echo.
         echo WARNING: CUDA installation failed.
         echo Possible reasons:
