@@ -284,8 +284,7 @@ class FasterWhisperInference:
         except Exception as e:
             logger.error(f"[abus_asr_faster_whisper.py] generate_and_write_file - An error occurred: {e}")
 
-        finally:
-            return subtitles
+        return subtitles
     
 
         
