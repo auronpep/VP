@@ -49,6 +49,15 @@ def demucs_split_file(input_path: str, output_dir, demucs_model: str, audio_form
             progress(float(tokens[0]) / 100.0, desc="Demucs")
             
             
+    if sp.returncode != 0:
+        logger.error(f'[abus:demucs_split_file] demucs exited with code {sp.returncode}')
+        raise RuntimeError(f'demucs failed (exit code {sp.returncode}). See the log for details.')
+
+    for stem_file in (demucs_inst_file, demucs_vocal_file):
+        if not os.path.exists(stem_file):
+            logger.error(f'[abus:demucs_split_file] expected stem missing: {stem_file}')
+            raise FileNotFoundError(f'demucs did not produce {stem_file}')
+
     inst_audio_file = os.path.join(output_dir, file_name + f"_{demucs_model}_inst." + audio_format)
     vocal_audio_file = os.path.join(output_dir, file_name + f"_{demucs_model}_vocal." + audio_format)
     
