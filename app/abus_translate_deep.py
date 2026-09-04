@@ -49,7 +49,6 @@ class DeepTranslator:
         
         # 텍스트를 문장 단위로 분리
         sentences = AbusText.split_into_sentences(text, use_punctuation)
-        sentences = sentences
         
         translated_sentences = []
         
