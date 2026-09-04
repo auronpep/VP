@@ -1,3 +1,4 @@
+import os
 import re
 
 
@@ -150,8 +151,12 @@ def get_serialized_vtt(dicts):
 
 import time
 
+INVALID_FILENAME_CHARS = r'[<>:"/\\|?*\x00-\x1f]'
+
 def safe_filename(name):
-    return f'{name}-{int(time.time())}'
+    stem, extension = os.path.splitext(name)
+    stem = re.sub(INVALID_FILENAME_CHARS, '_', stem)
+    return f'{stem}-{int(time.time())}{extension}'
     # from app import _args
     # INVALID_FILENAME_CHARS = r'[<>:"/\\|?*\x00-\x1f]'
     # safe_name = re.sub(INVALID_FILENAME_CHARS, '_', name)
