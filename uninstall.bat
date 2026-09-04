@@ -82,12 +82,23 @@ if exist "%~dp0\installer_files\" (
 echo ABUS uninstall.bat finished.
 pause
 
-:: Rebooting
-for /l %%i in (30,-1,1) do (
-    cls
-    echo.    
-    echo ABUS Uninstaller finished.
-    echo System will be rebooted in %%i seconds.
-    timeout /t 1 /nobreak >nul
+:: Ask user about reboot
+echo.
+echo A reboot is recommended so that removed components are fully unloaded.
+set /p REBOOT_NOW="Do you want to reboot now? (Y/N): "
+if /i "!REBOOT_NOW!"=="Y" (
+    echo.
+    echo Press Ctrl+C to cancel.
+    for /l %%i in (30,-1,1) do (
+        cls
+        echo.
+        echo ABUS Uninstaller finished.
+        echo System will be rebooted in %%i seconds.
+        echo Press Ctrl+C to cancel.
+        timeout /t 1 /nobreak >nul
+    )
+    shutdown /r /t 0
+) else (
+    echo.
+    echo Skipping reboot. Please reboot manually when convenient.
 )
-shutdown /r /t 0
