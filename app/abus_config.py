@@ -3,13 +3,15 @@ Configuration module for loading environment variables.
 Supports .env file loading via python-dotenv.
 """
 import os
+from typing import Optional
+
 from dotenv import load_dotenv
 
 # Load environment variables from .env file if it exists
 load_dotenv()
 
 
-def get_env(key: str, default: str = None) -> str:
+def get_env(key: str, default: Optional[str] = None) -> Optional[str]:
     """
     Get environment variable value.
     
