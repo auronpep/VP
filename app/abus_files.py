@@ -50,7 +50,7 @@ class FileManager:
     
     # translations
     def get_translation(self, language: str, file_extension: str, default=None):
-        logger.debug(f'[abus_files.py] [abus_files.py] get_translation: {language}, {file_extension}')
+        logger.debug(f'[abus_files.py] get_translation: {language}, {file_extension}')
         
         key = f'{language}{file_extension}'
         file_path = self.translations.get(key.lower(), default)
