@@ -28,9 +28,9 @@ from app.abus_audio import *
 
 class TTSRVC:
     def __init__(self):
-        self.tts = AzureTTS() if azure_text_api_working() == True else EdgeTTS()
+        self.tts = AzureTTS() if azure_text_api_working() else EdgeTTS()
         self.rvc = RVC()
-        self.translator = AzureTranslator() if azure_text_api_working() == True else DeepTranslator()
+        self.translator = AzureTranslator() if azure_text_api_working() else DeepTranslator()
     
     
     

@@ -40,9 +40,9 @@ class GradioBatchTTS:
 
         # self.downloader = YoutubeDownloader()
         self.voice_manager = MSVoiceManager(self.user_config.get('ms_language', "English"))
-        self.tts = AzureTTS() if azure_text_api_working() == True else EdgeTTS()
+        self.tts = AzureTTS() if azure_text_api_working() else EdgeTTS()
         
-        self.translator = AzureTranslator() if azure_text_api_working() == True else DeepTranslator()
+        self.translator = AzureTranslator() if azure_text_api_working() else DeepTranslator()
 
         asr_engine = self.user_config.get("asr_engine", 'faster-whisper')
         self.whisper_inf = self.switch_case(asr_engine)   
