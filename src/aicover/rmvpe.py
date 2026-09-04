@@ -248,7 +248,7 @@ class E2E(nn.Module):
             )
         else:
             self.fc = nn.Sequential(
-                nn.Linear(3 * N_MELS, N_CLASS), nn.Dropout(0.25), nn.Sigmoid()
+                nn.Linear(3 * 128, 360), nn.Dropout(0.25), nn.Sigmoid()
             )
 
     def forward(self, mel):
