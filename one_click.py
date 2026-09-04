@@ -33,7 +33,7 @@ class OneClick():
 
     @classmethod
     def is_x86_64(cls):
-        return platform.machine() == "x86_64"
+        return platform.machine().lower() in ("x86_64", "amd64")
 
 
     @classmethod
