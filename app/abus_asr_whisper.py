@@ -74,7 +74,7 @@ class WhisperInference:
     
     @staticmethod
     def available_langs():
-        return sorted(list(whisper.tokenizer.LANGUAGES.values()))    
+        return sorted(whisper.tokenizer.LANGUAGES.values())    
                     
                 
     def transcribe_live(self,

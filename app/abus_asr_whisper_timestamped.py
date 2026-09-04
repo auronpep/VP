@@ -75,7 +75,7 @@ class WhisperTimestampedInference:
     
     @staticmethod
     def available_langs():
-        return sorted(list(whisper_timestamped.tokenizer.LANGUAGES.values()))    
+        return sorted(whisper_timestamped.tokenizer.LANGUAGES.values())    
     
     
     def transcribe_live(self,
