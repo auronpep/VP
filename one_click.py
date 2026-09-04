@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 class OneClick():
-    script_dir = os.getcwd()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
     
     conda_root_prefix = os.environ.get('CONDA_ROOT_PREFIX', os.path.join(script_dir, "installer_files", "conda"))
     conda_env_path = os.environ.get('INSTALL_ENV_DIR', os.path.join(script_dir, "installer_files", "env"))
