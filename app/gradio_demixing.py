@@ -132,17 +132,17 @@ class GradioDemixing:
         if self.has_video:
             input_video_file = self.fm.get_split("Source.video")
             
-            progress(0.2, desc=f'encoding instrumentals-only video...')
+            progress(0.2, desc='encoding instrumentals-only video...')
             inst_video_file = path_add_postfix(input_video_file, f"_{demixing_model}_inst")
             ffmpeg_replace_audio(input_video_file, inst_audio_file, inst_video_file)
             self.fm.set_split("Instrumental.video", inst_video_file)
             
-            progress(0.6, desc=f'encoding vocal-only video...')
+            progress(0.6, desc='encoding vocal-only video...')
             vocal_video_file = path_add_postfix(input_video_file, f"_{demixing_model}_vocal")
             ffmpeg_replace_audio(input_video_file, vocal_audio_file, vocal_video_file)
             self.fm.set_split("Vocals.video", vocal_video_file)
             
-            progress(1, desc=f'video creation complete')
+            progress(1, desc='video creation complete')
             
             
     def show_model_info(self, demixing_model):

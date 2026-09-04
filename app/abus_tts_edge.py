@@ -40,7 +40,7 @@ class EdgeTTS:
         output_voice_file = os.path.join(path_dubbing_folder(), path_new_filename(ext = f".{audio_format}"))
         line = AbusText.normalize_text(line)
         if len(line) < 1:
-            logger.warning(f"[abus_tts_edge.py] request_tts - error: no line")
+            logger.warning("[abus_tts_edge.py] request_tts - error: no line")
             return False
         
         logger.debug(f'[abus_tts_edge.py] request_tts - line = {line}, voice_name = {voice_name}')

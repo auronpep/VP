@@ -122,7 +122,7 @@ class F5TTS:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
             torch.cuda.reset_max_memory_allocated()
-            logger.debug(f'[abus_tts_f5.py] release_cuda_memory - OK!! ')
+            logger.debug('[abus_tts_f5.py] release_cuda_memory - OK!! ')
                 
                 
     @gpu_decorator
@@ -156,7 +156,7 @@ class F5TTS:
         output_voice_file = os.path.join(path_dubbing_folder(), path_new_filename(ext = f".{audio_format}"))
         line = AbusText.normalize_text(line)
         if len(line) < 1:
-            logger.warning(f"[abus_tts_f5.py] request_tts - error: no line")
+            logger.warning("[abus_tts_f5.py] request_tts - error: no line")
             return False
         
         logger.debug(f'[abus_tts_f5.py] request_tts - line = {line}')
@@ -176,7 +176,7 @@ class F5TTS:
     
 
     def srt_to_voice(self, subtitle_file: str, output_file: str, ref_audio, ref_text, speed_factor, audio_format, progress=gr.Progress()):
-        tts_subtitle_file = path_add_postfix(subtitle_file, f"-f5-tts", ".srt")
+        tts_subtitle_file = path_add_postfix(subtitle_file, "-f5-tts", ".srt")
         
         # AbusText.process_subtitle_for_tts(subtitle_file, tts_subtitle_file)
         AbusSpacy.process_subtitle_for_tts(subtitle_file, tts_subtitle_file)    

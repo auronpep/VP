@@ -244,7 +244,7 @@ class GradioGulliver:
     def gradio_translate(self,
                         source_lang, transcription_text, target_lang):
         if len(transcription_text) < 1:
-            logger.warning(f"[gradio_gulliver.py] gradio_translate - no actions")
+            logger.warning("[gradio_gulliver.py] gradio_translate - no actions")
             return None, None, None, self.fm.get_all_files() 
         
         self.user_config.set("translate_source_language", source_lang)            
@@ -331,7 +331,7 @@ class GradioGulliver:
                     semitones = {semitones}, speed_factor = {speed_factor}, volume_factor = {volume_factor}, audio_format = {audio_format}")
         
         if len(translation_text) < 1:
-            logger.warning(f"[gradio_gulliver.py] gradio_edge_dubbing - no actions")
+            logger.warning("[gradio_gulliver.py] gradio_edge_dubbing - no actions")
             return None, None, self.fm.get_all_files() 
         
         self.user_config.set("edge_tts_pitch", semitones)     
@@ -456,7 +456,7 @@ class GradioGulliver:
                     model_choice = {model_choice}, speed_factor = {speed_factor}, audio_format = {audio_format}")
         
         if len(translation_text) < 1:
-            logger.warning(f"[gradio_gulliver.py] gradio_f5_dubbing_single - no actions")
+            logger.warning("[gradio_gulliver.py] gradio_f5_dubbing_single - no actions")
             return None, None, self.fm.get_all_files() 
         
             
@@ -525,7 +525,7 @@ class GradioGulliver:
                         celeb_name, celeb_audio, celeb_transcript, 
                         mode_choice, speed_factor, audio_format: str):
         if len(translation_text) < 1:
-            logger.warning(f"[gradio_gulliver.py] gradio_f5_dubbing_single - no actions")
+            logger.warning("[gradio_gulliver.py] gradio_f5_dubbing_single - no actions")
             return None, None, self.fm.get_all_files() 
         
             
@@ -599,7 +599,7 @@ class GradioGulliver:
                     speed_factor = {speed_factor}, audio_format = {audio_format}")
         
         if len(translation_text) < 1:
-            logger.warning(f"[gradio_gulliver.py] gradio_kokoro_dubbing - no actions")
+            logger.warning("[gradio_gulliver.py] gradio_kokoro_dubbing - no actions")
             return None, None, self.fm.get_all_files() 
         
         # self.user_config.set("edge_tts_rate", speed_factor)  

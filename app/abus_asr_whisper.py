@@ -56,7 +56,7 @@ class WhisperInference:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
             torch.cuda.reset_max_memory_allocated()
-            logger.debug(f'[abus_asr_whisper.py] release_cuda_memory - OK!! ')
+            logger.debug('[abus_asr_whisper.py] release_cuda_memory - OK!! ')
 
     @staticmethod
     def remove_input_files(file_paths: List[str]):

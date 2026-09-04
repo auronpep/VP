@@ -82,7 +82,7 @@ class GradioLiveTranslate:
     
     
     def gradio_stop(self):
-        logger.debug(f'[gradio_stop] ==>>')
+        logger.debug('[gradio_stop] ==>>')
         message = i18n("Stop Live")
         gr.Info(message)        
 
@@ -91,7 +91,7 @@ class GradioLiveTranslate:
         
     def gradio_start(self, 
                      audio_source, asr_engine, modelName, whisper_language, compute_type, denoise_level, source_language, translate_language):
-        logger.debug(f'[gradio_start] ==>>')
+        logger.debug('[gradio_start] ==>>')
         self.user_config.set("asr_engine", asr_engine)
         self.user_config.set(f'{asr_engine.replace("-", "_")}_model', modelName)
         self.user_config.set("whisper_language", whisper_language)
@@ -120,14 +120,14 @@ class GradioLiveTranslate:
     
     
     def gradio_clear(self):
-        logger.debug(f'[gradio_clear] ==>>')
+        logger.debug('[gradio_clear] ==>>')
         self.generator.clear_segments()
         self.whisper_live.clear_audio()
         return "", ""
     
 
     def gradio_save(self, audio_format: str = 'mp3'):
-        logger.debug(f'[abus_ui_live.py] gradio_save')
+        logger.debug('[abus_ui_live.py] gradio_save')
         message = i18n("Saving files...")
         gr.Info(message)
                 

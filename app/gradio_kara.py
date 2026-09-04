@@ -174,17 +174,17 @@ class GradioKara:
         if self.has_video:
             input_video_file = self.fm.get_split("Source.video")
             
-            progress(0.2, desc=f'encoding instrumentals-only video...')
+            progress(0.2, desc='encoding instrumentals-only video...')
             inst_video_file = path_add_postfix(input_video_file, f"_{demixing_model}_inst")
             ffmpeg_replace_audio(input_video_file, inst_audio_file, inst_video_file)
             self.fm.set_split("Instrumental.video", inst_video_file)
             
-            progress(0.6, desc=f'encoding vocal-only video...')
+            progress(0.6, desc='encoding vocal-only video...')
             vocal_video_file = path_add_postfix(input_video_file, f"_{demixing_model}_vocal")
             ffmpeg_replace_audio(input_video_file, vocal_audio_file, vocal_video_file)
             self.fm.set_split("Vocals.video", vocal_video_file)
             
-            progress(1, desc=f'video creation complete')
+            progress(1, desc='video creation complete')
     
 
 
@@ -248,19 +248,19 @@ class GradioKara:
         
         output_dir = os.path.dirname(source_audio)
             
-        progress(0.2, desc=f'Separating vocals and instrumental...')
+        progress(0.2, desc='Separating vocals and instrumental...')
         mdxnet_voc_ft = os.path.join(self.mdxnet_models_dir, 'UVR-MDX-NET-Voc_FT.onnx')     
         vocals_path, instrumentals_path = run_mdx(self.mdx_model_params, output_dir, mdxnet_voc_ft, source_audio, denoise=True, keep_orig=True)
 
-        progress(0.6, desc=f'Separating main vocals and backup vocals...')
+        progress(0.6, desc='Separating main vocals and backup vocals...')
         mdxnet_kara2 = os.path.join(self.mdxnet_models_dir, 'UVR_MDXNET_KARA_2.onnx')
         backup_vocals_path, main_vocals_path = run_mdx(self.mdx_model_params, output_dir, mdxnet_kara2, vocals_path, suffix='Backup', invert_suffix='Main', denoise=True)
         
-        progress(0.6, desc=f'Separating reverb...')
+        progress(0.6, desc='Separating reverb...')
         mdxnet_reverb = os.path.join(self.mdxnet_models_dir, 'Reverb_HQ_By_FoxJoy.onnx')
         _, main_vocals_dereverb_path = run_mdx(self.mdx_model_params, output_dir, mdxnet_reverb, main_vocals_path, invert_suffix='DeReverb', exclude_main=True, denoise=True)
             
-        progress(1, desc=f'demixing complete')
+        progress(1, desc='demixing complete')
                     
         self.fm.set_split("Instrumental.audio", instrumentals_path)
         self.fm.set_split("Vocals.audio", vocals_path)        
