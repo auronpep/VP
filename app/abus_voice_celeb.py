@@ -90,10 +90,10 @@ class CelebVoiceManager():
     
     def voice_names(self, language = "English"):
         results = []       
-        celebrities = self.celebrities[language]
+        celebrities = self.celebrities.get(language, [])
 
         for celebrity in celebrities:
-            if celebrity.has_audio() == True:
+            if celebrity.has_audio():
                 results.append(celebrity.display_name)
         return results
     
