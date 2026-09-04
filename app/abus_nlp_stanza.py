@@ -60,8 +60,8 @@ class AbusStanza:
     def normalize_text(cls, text: str) -> str:
         for full, half in cls.FULL_TO_HALF_MAP.items():
             text = text.replace(full, half)
-        text = re.sub(r'["""]', '"', text)
-        text = re.sub(r"[''']", "'", text)
+        text = re.sub(r'[“”„‟]', '"', text)
+        text = re.sub(r"[‘’‚‛]", "'", text)
         text = re.sub(r'\s+', ' ', text)
         return text.strip()
 
