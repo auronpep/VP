@@ -84,6 +84,10 @@ class GradioTranslate:
 
         if subtitle_file:    
             translated_file = self._translate_subtitle(subtitle_file, source_lang, target_lang)
+            if not translated_file:
+                # _translate_subtitle already logged and warned; there is no
+                # file to read back, and open(None) would kill the handler.
+                return None, None
             return translated_file, self._read_file(translated_file)
         else:
             translated_text = self._translate_text(input_text, source_lang, target_lang)
