@@ -45,6 +45,8 @@ class MSVoice():
                 lang = iso639.Language.from_part1(code)
             elif len(code) == 3:
                 lang = iso639.Language.from_part2b(code)
+            else:
+                return 'English'
             return lang.name
         except iso639.LanguageNotFoundError:
             return 'English'
