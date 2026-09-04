@@ -143,6 +143,8 @@ class WhisperLive:
         self.stop_event = threading.Event()
         self.timestamp_offset = 0.0
         self.frames_np = None
+        self.segment_queue = queue.Queue()
+        self.vad_deque.clear()
 
         self.whisper_params = params        
         self.whisper_inf.model = None
