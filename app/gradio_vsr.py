@@ -171,8 +171,8 @@ class GradioVSR:
                     percentage = int(match.group(0))
                     if progress is not None and (percentage >= 0 and percentage <= 100): 
                         progress(float(percentage) / 100.0, desc="VideoArtifactReduction")
-            except (ValueError, IndexError):
-                pass
+            except (ValueError, IndexError) as e:
+                logger.debug(f'[gradio_vsr.py] update_progress - could not parse progress: {e}')
 
         with gr.Blocks() as demo:  
             progress = gr.Progress()            
@@ -235,8 +235,8 @@ class GradioVSR:
                     percentage = int(match.group(0))
                     if progress is not None and (percentage >= 0 and percentage <= 100): 
                         progress(float(percentage) / 100.0, desc="VideoSuperRes")
-            except (ValueError, IndexError):
-                pass
+            except (ValueError, IndexError) as e:
+                logger.debug(f'[gradio_vsr.py] update_progress - could not parse progress: {e}')
 
         with gr.Blocks() as demo:  
             progress = gr.Progress()            
@@ -282,8 +282,8 @@ class GradioVSR:
                     # total_size = int(match.group(2)) # total size 추가
                     progress(1.0, desc="VideoCompression")
 
-            except (ValueError, IndexError):
-                pass
+            except (ValueError, IndexError) as e:
+                logger.debug(f'[gradio_vsr.py] update_progress - could not parse progress: {e}')
 
         with gr.Blocks() as demo:  
             progress = gr.Progress()            
