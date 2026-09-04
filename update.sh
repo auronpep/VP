@@ -30,7 +30,7 @@ export TEMP="$INSTALL_DIR"
 
 # Check if conda exists
 if [ ! -f "$CONDA_ROOT_PREFIX/bin/conda" ]; then
-    echo "Conda not found. Please run start-voice.sh first to set up the environment."
+    echo "Conda not found. Please run start.sh first to set up the environment."
     exit 1
 fi
 
