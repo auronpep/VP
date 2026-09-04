@@ -125,7 +125,10 @@ def vsr_artifact_reduction(maxine_sdk_path, input_path, output_path, var_mode, p
     logger.debug(f'[abus_vsr.py] vsr_artifact_reduction - command = {command}')    
 
     try:
-        asyncio.run(run_command(command, progress_callback))
+        return_code = asyncio.run(run_command(command, progress_callback))
+        if return_code != 0:
+            logger.error(f"[abus_vsr.py] vsr_artifact_reduction - VideoEffectsApp.exe exited with code {return_code}")
+            return False
         return True
     
     except Exception as e:
@@ -184,7 +187,10 @@ def vsr_super_res(maxine_sdk_path, input_path, output_path, vsr_mode, vsr_resolu
     logger.debug(f'[abus_vsr.py] vsr_super_res - command = {command}')    
 
     try:
-        asyncio.run(run_command(command, progress_callback))
+        return_code = asyncio.run(run_command(command, progress_callback))
+        if return_code != 0:
+            logger.error(f"[abus_vsr.py] vsr_super_res - VideoEffectsApp.exe exited with code {return_code}")
+            return False
         return True
     
     except Exception as e:
