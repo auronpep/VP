@@ -44,7 +44,11 @@ cd /D "%~dp0"
 
 
 :: quit task
-choice /C YN /N /T 10 /D Y /M "Terminate all running python.exe. Do you want to continue (Y/N)?"
+echo.
+echo WARNING: this force-terminates EVERY python.exe on this machine,
+echo          not only the ones belonging to this installation.
+echo          Unsaved work in other Python programs will be lost.
+choice /C YN /N /T 10 /D N /M "Terminate all running python.exe. Do you want to continue (Y/N)?"
 if errorlevel 2 (
     echo.
     echo Quit Uninstallation. 
