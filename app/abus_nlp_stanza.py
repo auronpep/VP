@@ -226,7 +226,7 @@ class AbusStanza:
                 if any(text.endswith(q) for q in ['까', '니', '가요', '나요']):
                     is_question = True
             elif lang == 'zh':
-                if text.endswith('吗') or text.endswith('呢'):
+                if text.endswith(('吗', '呢')):
                     is_question = True
             if is_question:
                 ending_map = {'ja': '？', 'zh': '？', 'ko': '?'}
