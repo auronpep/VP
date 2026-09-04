@@ -117,9 +117,11 @@ class AbusSpacy:
     @classmethod
     def complete_sentence(cls, text: str, lang: str) -> str:
         text = text.rstrip()
+        if not text:
+            return text
         if text[-1] in cls.SENTENCE_ENDINGS:
             return text
-        return text + ('?' if re.search(r'^(who|what|when|where|why|how)', text, re.I) else '.')
+        return text + ('?' if re.search(r'^(who|what|when|where|why|how)\b', text, re.I) else '.')
 
     @classmethod
     def merge_and_split_events(cls, subs, lang: Optional[str] = None, model_size: str = 'sm') -> List[pysubs2.SSAEvent]:
