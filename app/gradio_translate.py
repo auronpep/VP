@@ -48,14 +48,16 @@ class GradioTranslate:
         
         if file_obj is not None:
             source_file = cmd_copy_file_to(file_obj.name, path_workspace_subfolder(file_obj.name))
-            source_text_file = path_add_postfix(source_file, f'translate-{time.time()}-{source_lang}.txt')   
-            target_text_file = path_add_postfix(source_file, f'translate-{time.time()}-{target_lang}.txt')  
+            timestamp = int(time.time())
+            source_text_file = path_add_postfix(source_file, f'-translate-{timestamp}-{source_lang}', '.txt')
+            target_text_file = path_add_postfix(source_file, f'-translate-{timestamp}-{target_lang}', '.txt')
         
             self._write_file(source_text_file, src_text)
             self._write_file(target_text_file, target_text)
         else:
-            source_text_file = os.path.join(path_translate_folder(), f'translate-{time.time()}-{source_lang}.txt')   
-            target_text_file = os.path.join(path_translate_folder(), f'translate-{time.time()}-{target_lang}.txt')  
+            timestamp = int(time.time())
+            source_text_file = os.path.join(path_translate_folder(), f'translate-{timestamp}-{source_lang}.txt')
+            target_text_file = os.path.join(path_translate_folder(), f'translate-{timestamp}-{target_lang}.txt')
             
             self._write_file(source_text_file, src_text)
             self._write_file(target_text_file, target_text)
