@@ -118,10 +118,10 @@ class WhisperLive:
         self.stop_event.set()
 
         if self.thread_put_audio:
-            self.thread_put_audio.join()
+            self.thread_put_audio.join(timeout=5.0)
             self.thread_put_audio = None
         if self.thread_get_audio:
-            self.thread_get_audio.join()
+            self.thread_get_audio.join(timeout=5.0)
             self.thread_get_audio = None
             
         self.whisper_inf.model = None
@@ -153,21 +153,33 @@ class WhisperLive:
 
     def _thread_put_audio(self):
         logger.debug(f'[ABUS_LIVE] _thread_put_audio')
-        with self.device.recorder(samplerate=self.sample_rate, channels=self.channels) as mic:
-            while True:
-                audio = mic.record(self.chunk_size)          
-                self.audio_queue.put(audio)
-                self.total_audio = np.concatenate((self.total_audio, audio), axis=0)
+        try:
+            with self.device.recorder(samplerate=self.sample_rate, channels=self.channels) as mic:
+                while True:
+                    audio = mic.record(self.chunk_size)
+                    self.audio_queue.put(audio)
+                    self.total_audio = np.concatenate((self.total_audio, audio), axis=0)
 
-                if self.stop_event.is_set() == True:
-                    self.audio_queue.put(None)
-                    logger.debug(f'[ABUS_LIVE] _thread_put_audio exit....')
-                    time.sleep(0.1)
-                    break
+                    if self.stop_event.is_set() == True:
+                        logger.debug(f'[ABUS_LIVE] _thread_put_audio exit....')
+                        time.sleep(0.1)
+                        break
+        except Exception as e:
+            logger.error(f'[ABUS_LIVE] _thread_put_audio - An error occurred: {e}')
+        finally:
+            # Always send the sentinel, including when the recorder never opened,
+            # otherwise the consumer blocks forever and stop_thread() cannot join.
+            audio_queue = self.audio_queue
+            if audio_queue is not None:
+                audio_queue.put(None)
 
     def _thread_get_audio(self):
+        audio_queue = self.audio_queue
         while not self.stop_event.is_set():
-            audio = self.audio_queue.get()
+            try:
+                audio = audio_queue.get(timeout=0.5)
+            except queue.Empty:
+                continue
             if audio is None:  # 종료 신호
                 self.frames_np = None
                 logger.debug(f'[ABUS_LIVE] _thread_get_audio exit....')
@@ -194,7 +206,7 @@ class WhisperLive:
                     time.sleep(0.1)
             
             self.timestamp_offset += (self.chunk_size / self.sample_rate)                                
-            self.audio_queue.task_done()
+            audio_queue.task_done()
         
     
     def run_asr(self, frames_np, params, timestamp_offset):
