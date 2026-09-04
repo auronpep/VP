@@ -65,7 +65,7 @@ class GradioVSR:
         
         self.has_audio, self.has_video = ffmpeg_codec_type(self.source_file)
         logger.debug(f'upload_source: source_file={self.source_file}, has_audio={self.has_audio}, has_video={self.has_video}')
-        if self.has_video == False:   # audio-only
+        if not self.has_video:   # audio-only
             return False
         else:
             self.fm.set_split("Source.video", self.source_file)
@@ -86,7 +86,7 @@ class GradioVSR:
         self.user_config.set("compression_preset", compression_preset)  
         
         try:            
-            if self.has_video == False:
+            if not self.has_video:
                 logger.error(f"[gradio_vsr.py] run_maxine - invalid video")
                 return None, None
             

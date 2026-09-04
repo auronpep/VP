@@ -89,9 +89,9 @@ class GradioAICover:
         self.source_file = uploaded_file
         self.has_audio, self.has_video = ffmpeg_codec_type(self.source_file)
         logger.debug(f'upload_source: source_file={self.source_file}, has_audio={self.has_audio}, has_video={self.has_video}')
-        if self.has_audio == False:     # error
+        if not self.has_audio:     # error
             return False
-        elif self.has_video == False:   # audio-only
+        elif not self.has_video:   # audio-only
             self.fm.set_split("Source.video", None)
             self.fm.set_split("Source.audio", self.source_file)   
         else:

@@ -147,9 +147,9 @@ class GradioBatchTTS:
         
         has_audio, has_video = ffmpeg_codec_type(source_file)
         logger.debug(f'_upload_file: source_file={source_file}, has_audio={has_audio}, has_video={has_video}')
-        if has_audio == False:     # error
+        if not has_audio:     # error
             return None
-        elif has_video == False:   # audio-only
+        elif not has_video:   # audio-only
             fm.set_split("Source.video", None)
             fm.set_split("Source.audio", source_file)   
         else:
