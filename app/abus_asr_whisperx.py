@@ -328,6 +328,5 @@ class WhisperXInference:
         except Exception as e:
             logger.error(f"[abus_asr_whisperx.py] generate_and_write_file - An error occurred: {e}")
 
-        finally:
-            return subtitles
+        return subtitles
     
