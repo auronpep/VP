@@ -125,7 +125,9 @@ class VoiceActivityDetector:
         Initializes the VoiceActivityDetector with a voice activity detection model and a threshold.
 
         Args:
-            threshold (float, optional): The probability threshold for detecting voice activity. Defaults to 0.5.
+            threshold (float, optional): Default probability threshold, kept for callers
+                that want one. Note __call__ does NOT apply it - it returns the raw
+                probability and the caller decides. Defaults to 0.5.
         """
         self.model = VoiceActivityDetection()
         self.threshold = threshold
@@ -133,16 +135,17 @@ class VoiceActivityDetector:
 
     def __call__(self, audio_frame):
         """
-        Determines if the given audio frame contains speech by comparing the detected speech probability against
-        the threshold.
+        Computes the speech probability for the given audio frame.
 
         Args:
             audio_frame (np.ndarray): The audio frame to be analyzed for voice activity. It is expected to be a
                                       NumPy array of audio samples.
 
         Returns:
-            bool: True if the speech probability exceeds the threshold, indicating the presence of voice activity;
-                  False otherwise.
+            float: The speech probability, in the range 0.0 to 1.0. This is NOT
+                   thresholded - compare it yourself (see self.threshold). Note that
+                   any non-zero probability is truthy, so `if vad(frame):` is almost
+                   always True and is not a voice-activity test.
         """
         speech_prob = self.model(torch.from_numpy(audio_frame), self.frame_rate).item()
         # logger.debug(f'[VAD] speech_prob = {speech_prob}')
