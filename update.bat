@@ -142,6 +142,12 @@ if "%abus_genuine_installed%" == "F" (
 
 set LOG_LEVEL=DEBUG
 call python start-abus.py voice --update
+if errorlevel 1 (
+	echo.
+	echo Update FAILED. See the messages above for the cause.
+	pause
+	exit /b 1
+)
 echo Pip update process completed.
 echo.
 
