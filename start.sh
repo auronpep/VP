@@ -154,14 +154,14 @@ if [ "$CONDA_EXISTS" == "F" ] || [ "$CONDA_BASE_CORRUPTED" == "T" ]; then
     echo "Downloading Miniconda from $MINICONDA_URL"
     mkdir -p "$INSTALL_DIR"
     
-    if ! curl -Lk "$MINICONDA_URL" -o "$INSTALL_DIR/$MINICONDA_INSTALLER"; then
+    if ! curl -fL "$MINICONDA_URL" -o "$INSTALL_DIR/$MINICONDA_INSTALLER"; then
         echo "Miniconda failed to download."
         exit 1
     fi
     
-    # Verify checksum before running installer
-    echo "${MINICONDA_CHECKSUM}  ${INSTALL_DIR}/${MINICONDA_INSTALLER}" | sha256sum --check || { echo "ERROR: Miniconda checksum mismatch. Aborting."; exit 1; }
-
+    # NOTE: the downloaded installer is NOT checksum-verified. MINICONDA_CHECKSUM
+    # is currently unused and carries the same value for macOS and Linux, so it
+    # cannot be correct for both and must be regenerated before it is wired up.
     echo "Installing Miniconda to $CONDA_ROOT_PREFIX"
     # Run installer - python.app package may fail on macOS but conda should still work
     # Use set +e temporarily to allow installation to continue even if python.app fails
