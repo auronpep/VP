@@ -255,6 +255,5 @@ class WhisperInference:
         except Exception as e:
             logger.error(f"[abus_asr_whisper.py] write_file - An error occurred: {e}")
 
-        finally:
-            return subtitles
+        return subtitles
 
