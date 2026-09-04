@@ -70,7 +70,7 @@ class GradioTranslate:
             gr.Warning(message)
             return None, None
         
-        if len(source_lang.strip()) <= 0:
+        if not (source_lang and source_lang.strip()):
             source_lang = AbusText.detect_language_name(text[:200])          
         
         input_text = text
