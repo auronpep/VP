@@ -27,9 +27,7 @@ def get_srt(segments):
     for i, segment in enumerate(segments):
         output += f"{i + 1}\n"
         output += f"{timeformat_srt(segment['start'])} --> {timeformat_srt(segment['end'])}\n"
-        if segment['text'].startswith(' '):
-            segment['text'] = segment['text'][1:]
-        output += f"{segment['text']}\n\n"
+        output += f"{segment['text'].lstrip()}\n\n"
     return output
 
 
@@ -55,9 +53,7 @@ def get_vtt(segments):
     for i, segment in enumerate(segments):
         output += f"{i + 1}\n"
         output += f"{timeformat_vtt(segment['start'])} --> {timeformat_vtt(segment['end'])}\n"
-        if segment['text'].startswith(' '):
-            segment['text'] = segment['text'][1:]
-        output += f"{segment['text']}\n\n"
+        output += f"{segment['text'].lstrip()}\n\n"
     return output
 
 def get_vtt_block(segments, start_idx=1):
@@ -65,9 +61,7 @@ def get_vtt_block(segments, start_idx=1):
     for i, segment in enumerate(segments):
         output += f"{i + start_idx}\n"
         output += f"{timeformat_vtt(segment['start'])} --> {timeformat_vtt(segment['end'])}\n"
-        if segment['text'].startswith(' '):
-            segment['text'] = segment['text'][1:]
-        output += f"{segment['text']}\n\n"
+        output += f"{segment['text'].lstrip()}\n\n"
     return output
 
 
@@ -76,9 +70,7 @@ def get_vtt_block(segments, start_idx=1):
 def get_txt(segments):
     output = ""
     for i, segment in enumerate(segments):
-        if segment['text'].startswith(' '):
-            segment['text'] = segment['text'][1:]
-        output += f"{segment['text']}\n"
+        output += f"{segment['text'].lstrip()}\n"
     return output
 
 
