@@ -197,14 +197,14 @@ if [ "$CONDA_EXISTS" == "F" ] || [ "$CONDA_BASE_CORRUPTED" == "T" ]; then
         echo "This may happen if python.app installation failed (expected on macOS)."
         echo ""
         echo "Searching for conda in installation directory..."
-        local found_condas=$(find "$CONDA_ROOT_PREFIX" -name "conda" -type f 2>/dev/null | head -5)
+        found_condas=$(find "$CONDA_ROOT_PREFIX" -name "conda" -type f 2>/dev/null | head -5)
         if [ -n "$found_condas" ]; then
             echo "Found conda binaries:"
             echo "$found_condas"
             echo ""
             echo "Attempting to use conda from pkgs directory..."
             # Try to use conda from pkgs to complete installation
-            local pkgs_conda=$(find "$CONDA_ROOT_PREFIX/pkgs" -name "conda" -type f -path "*/bin/conda" 2>/dev/null | head -1)
+            pkgs_conda=$(find "$CONDA_ROOT_PREFIX/pkgs" -name "conda" -type f -path "*/bin/conda" 2>/dev/null | head -1)
             if [ -n "$pkgs_conda" ] && [ -f "$pkgs_conda" ]; then
                 echo "Found conda at: $pkgs_conda"
                 echo "Attempting to complete installation using this conda..."
