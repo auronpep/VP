@@ -330,7 +330,7 @@ class OneClick():
         # Add conda-forge channel (idempotent operation)
         # The command will fail if channel already exists, which is fine
         print("Adding conda-forge channel...")
-        cls.oc_run_cmd("conda config --add channels conda-forge 2>&1 | grep -v 'already exists' || true", environment=True)
+        cls.oc_run_cmd("conda config --add channels conda-forge", environment=True)
         
         # Set channel priority to flexible (allows packages from multiple channels)
         # This is recommended for better package resolution
@@ -431,7 +431,7 @@ class OneClick():
         # Remove nomkl and install mkl
         # nomkl may not be installed, so don't fail if it's not found
         print("Removing nomkl (if present)...")
-        cls.oc_run_cmd(f'conda remove --force --yes nomkl 2>&1 || true', environment=True)
+        cls.oc_run_cmd("conda remove --force --yes nomkl", environment=True)
         
         # Install mkl with retry logic
         max_retries = 3
