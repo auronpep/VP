@@ -114,6 +114,11 @@ class WhisperLive:
             if device.name == device_name:
                 self.device = device
                 break
+        else:
+            raise ValueError(
+                f"Audio device not found: {device_name!r}. "
+                f"Available devices: {self.all_devices_name()}"
+            )
     
     def stop_thread(self):
         self.stop_event.set()
